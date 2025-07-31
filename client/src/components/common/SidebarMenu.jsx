@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { NavItem } from "./NavItem";
+import { NavItem } from "./../common/NavItem";
 
 export const SidebarMenu = ({ setIsSidebarOpen, sideMenuClass }) => {
   return (

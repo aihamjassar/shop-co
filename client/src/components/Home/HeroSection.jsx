@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import heroImg from "../assets/heroImg.png";
-import star from "../assets/Vector.svg";
+import heroImg from "../../assets/heroImg.png";
+import star from "../../assets/Vector.svg";
 import { motion } from "framer-motion";
 
 export const HeroSection = () => {

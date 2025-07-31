@@ -1,7 +1,7 @@
 import { Menu, Search, ShoppingCartIcon, UserCircle, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { SidebarMenu } from "./SidebarMenu";
+import { SidebarMenu } from "./../common/SidebarMenu";
 import { motion } from "framer-motion";
 
 export const Header = () => {
