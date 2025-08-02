@@ -1,36 +1,18 @@
-import { Star, StarHalf } from "lucide-react";
-export const ProductCard = ({ product }) => {
+import { Stars } from "./Stars";
+export const ProductSlide = ({ product }) => {
   const { name, price, img, rating, discount } = product;
-  const printStars = () => {
-    let stars = [];
-    const integralPart = Math.trunc(rating);
-    for (let index = 0; index < integralPart; index++) {
-      stars.push(
-        <Star className="size-4 text-[#FFC633] fill-[#FFC633]" key={index} />
-      );
-    }
-    if (rating - integralPart > 0) {
-      stars.push(
-        <StarHalf
-          className="size-4 text-[#FFC633] fill-[#FFC633]"
-          key={`${rating}-half`}
-        />
-      );
-    }
-    return stars;
-  };
 
   return (
-    <div className="min-w-48 lg:w-52 space-y-3 overflow-hidden">
+    <div className="min-w-48 lg:w-52 space-y-3 overflow-hidden snap-start">
       <img
         src={img}
         alt={name}
-        className="w-full min-h-[250px] object-cover rounded-2xl transition-transform duration-300 hover:scale-110"
+        className="w-full object-cover rounded-2xl transition-transform duration-300 hover:scale-110"
       />
       <div className="space-y-2">
-        <h3 className="text-[16px] font-bold truncate">{name}</h3>
+        <h3 className="text-[16px] font-bold truncate capitalize">{name}</h3>
         <div className="flex items-center gap-0.5">
-          {printStars()}
+          <Stars rating={rating} />
           <span className="text-[14px]">{rating}/</span>
           <span className="text-[14px] text-black/60">5</span>
         </div>

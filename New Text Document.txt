@@ -1,1 +1,3 @@
 npm install react-rating-stars-component
+npm install classNames 
+خلي التصميم حيوي يساعد على التعلم

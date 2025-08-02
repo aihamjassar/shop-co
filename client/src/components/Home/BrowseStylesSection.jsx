@@ -41,7 +41,9 @@ const CardStyle = ({ name, image, link }) => {
       to={`/products/${link}`}
       className="relative w-full rounded-2xl overflow-hidden bg-white transition-transform duration-300 hover:scale-110"
     >
-      <h3 className="absolute top-5 left-5 text-2xl font-bold">{name}</h3>
+      <h3 className="absolute top-5 left-5 text-2xl font-bold capitalize">
+        {name}
+      </h3>
       <img src={image} alt={name} className="w-full h-64 object-cover" />
     </Link>
   );

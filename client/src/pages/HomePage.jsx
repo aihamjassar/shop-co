@@ -1,6 +1,7 @@
 import { BrowseStylesSection } from "../components/Home/BrowseStylesSection";
 import { HeroSection } from "../components/Home/HeroSection";
 import { NewArrivalsSection } from "../components/Home/NewArrivalsSection";
+import { TestimonialsSection } from "../components/Home/TestimonialsSection";
 import { TopSellingSection } from "../components/Home/TopSellingSection";
 
 export const HomePage = () => {
@@ -11,6 +12,7 @@ export const HomePage = () => {
       <NewArrivalsSection />
       <TopSellingSection />
       <BrowseStylesSection />
+      <TestimonialsSection />
     </main>
   );
 };
