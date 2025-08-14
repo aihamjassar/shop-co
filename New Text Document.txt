@@ -1,3 +1,62 @@
 npm install react-rating-stars-component
 npm install classNames 
 خلي التصميم حيوي يساعد على التعلم
+
+import React from "react";
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // يحدث عند وقوع خطأ ويحدث إعادة رسم الواجهة مع Fallback UI
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // هنا يمكنك تسجيل الخطأ في خدمة تتبع الأخطاء مثل Sentry
+    console.error("Caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // واجهة بديلة تظهر بدل مكونات التطبيق المعطوبة
+      return <h1>عذراً، حدث خطأ غير متوقع.</h1>;
+    }
+
+    return this.props.children;
+  }
+}
+
+export default ErrorBoundary;
+
+
+ ملف app.js
+هذا الملف مسؤوليته إنشاء وإعداد تطبيق Express فقط.
+
+فيه:
+
+استدعاء مكتبة express.
+
+إعداد الـ middlewares (مثل bodyParser, morgan, cors, إلخ).
+
+تعريف الـ routes.
+
+التعامل مع الأخطاء (global error handler).
+
+2️⃣ ملف server.js
+هذا الملف مسؤوليته تشغيل السيرفر فقط.
+
+يستورد app.js ويبدأ الاستماع (listen) على البورت.
+
+فيه أيضًا:
+
+تشغيل قاعدة البيانات.
+
+معالجة الأخطاء الكبيرة على مستوى الـ process (uncaughtException, unhandledRejection).
+
+أي إعدادات تخص البنية التحتية (infrastructure) للسيرفر.
+
+📌 مثال:

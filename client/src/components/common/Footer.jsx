@@ -18,7 +18,7 @@ export const Footer = () => {
       <div className="container mx-auto px-5 md:px-8 py-10">
         <div className="flex flex-col sm:flex-row lg:justify-between gap-10 sm:gap-5 bg-black rounded-xl px-4 py-10 mb-8 shadow-md">
           <p className="text-3xl lg:text-4xl font-extrabold leading-9 text-white uppercase max-w-96 sm:w-1/2 lg:max-w-lg lg:flex justify-center">
-            stay upto date about our latest offers
+            Stay up to date with our latest offers
           </p>
           <form className="space-y-5 sm:w-1/2 lg:max-w-lg lg:mx-auto">
             <label htmlFor="email" className="relative block">
@@ -93,36 +93,44 @@ export const Footer = () => {
               </h3>
               <ul className="space-y-2.5">
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     About
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Features
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Works
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Career
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -132,36 +140,44 @@ export const Footer = () => {
               </h3>
               <ul className="space-y-2.5">
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Customer Support
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Delivery Details
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Terms & conditions
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Privacy Policy
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -171,36 +187,44 @@ export const Footer = () => {
               </h3>
               <ul className="space-y-2.5">
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Account
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Manage Deliveries
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Orders
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Payment
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -210,36 +234,44 @@ export const Footer = () => {
               </h3>
               <ul className="space-y-2.5">
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Free eBook
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Development
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     How to-Blog
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to={"https://example.com"}
+                  <a
+                    href={"https://example.com"}
+                    rel="noopener noreferrer"
+                    target="_blank"
                     className="hover:text-blue-700 transition-colors"
                   >
                     Youtube Playlist
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>

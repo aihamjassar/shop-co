@@ -10,10 +10,12 @@ export const ProductsSlider = ({ products, title }) => {
           {title}
         </h2>
         <div className={"lg:flex justify-center"}>
-          <Slider btnClass={"lg:hidden"}>
-            {products.map((product) => (
-              <ProductSlide key={product._id} product={product} />
-            ))}
+          <Slider btnClass={"lg:group-hover:hidden"}>
+            <div className="grid [grid-template-columns:repeat(4,minmax(192px,208px))] gap-5">
+              {products.map((product) => (
+                <ProductSlide key={product._id} product={product} />
+              ))}
+            </div>
           </Slider>
         </div>
 

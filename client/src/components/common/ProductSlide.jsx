@@ -1,12 +1,17 @@
+import { Link } from "react-router-dom";
 import { Stars } from "./Stars";
 export const ProductSlide = ({ product }) => {
-  const { name, price, img, rating, discount } = product;
+  const { _id, name, price, img, rating, discount } = product;
 
   return (
-    <div className="min-w-48 lg:w-52 space-y-3 overflow-hidden snap-start">
+    <Link
+      to={`/details/${_id}`}
+      className="space-y-3 overflow-hidden snap-start"
+    >
       <img
         src={img}
         alt={name}
+        loading="lazy"
         className="w-full object-cover rounded-2xl transition-transform duration-300 hover:scale-110"
       />
       <div className="space-y-2">
@@ -32,6 +37,6 @@ export const ProductSlide = ({ product }) => {
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

@@ -8,11 +8,14 @@ export const TestimonialSlide = ({ testimonial }) => {
       <Stars rating={rating} />
       <div className="flex items-center gap-1.5">
         <h3 className="text-[20px] font-bold">{name}</h3>
-        {active && <CheckCircle2 className="text-white fill-green-600" />}
+        {active && (
+          <CheckCircle2
+            className="text-white fill-green-600"
+            aria-label="Verified customer"
+          />
+        )}
       </div>
-      <p className="italic text-[16px] text-black/60 leading-6">
-        "{text}"
-      </p>
+      <p className="italic text-[16px] text-black/60 leading-6">"{text}"</p>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRef } from "react";
 
-export const Slider = ({ children, btnsClass }) => {
+export const Slider = ({ children, btnClass }) => {
   const scrollRef = useRef(null);
 
   const scrollRight = () =>
@@ -25,14 +25,18 @@ export const Slider = ({ children, btnsClass }) => {
         {children}
       </div>
       <button
-        className={`absolute top-1/2 -translate-y-1/2 left-2 z-10 w-10 h-10 p-2 rounded-full bg-black text-white cursor-pointer hidden md:group-hover:block ${btnsClass} hover:bg-gray-800 transition-colors`}
+        className={`absolute top-1/2 -translate-y-1/2 left-2 z-10 w-10 h-10 p-2 rounded-full bg-black text-white cursor-pointer hidden sm:group-hover:block ${btnClass} hover:bg-gray-800 transition-colors`}
         onClick={scrollLeft}
+        role="button"
+        aria-label="Scroll left"
       >
         <ArrowLeft />
       </button>
       <button
-        className={`absolute top-1/2 -translate-y-1/2 right-2 z-10 w-10 h-10 p-2 rounded-full bg-black text-white cursor-pointer hidden md:group-hover:block ${btnsClass} hover:bg-gray-800 transition-colors`}
+        className={`absolute top-1/2 -translate-y-1/2 right-2 z-10 w-10 h-10 p-2 rounded-full bg-black text-white cursor-pointer hidden sm:group-hover:block ${btnClass} hover:bg-gray-800 transition-colors`}
         onClick={scrollRight}
+        role="button"
+        aria-label="Scroll right"
       >
         <ArrowRight />
       </button>

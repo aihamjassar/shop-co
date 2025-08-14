@@ -1,12 +1,11 @@
-import { Link } from "react-router-dom";
 import heroImg from "../../assets/heroImg.png";
 import star from "../../assets/Vector.svg";
 import { motion } from "framer-motion";
 
 export const HeroSection = () => {
   return (
-    <section className="bg-[#f2f0f1] min-h-screen ">
-      <div className="container mx-auto px-5 md:px-8 pt-32">
+    <section className="bg-[#f2f0f1] ">
+      <div className="container mx-auto px-5 md:px-8 pt-6 xl:pt-16">
         <div className="flex flex-col lg:flex-row justify-between gap-2 md:gap-10">
           {/* Right Side */}
           <motion.div
@@ -25,14 +24,14 @@ export const HeroSection = () => {
                 your sense of style.
               </p>
             </div>
-            <Link
-              to={"/"}
+            <a
+              href={"#browsesByStyle"}
               className="block w-full lg:w-52 p-3.5 rounded-[62px] text-white bg-black text-center my-8 cursor-pointer hover:bg-gray-800 transition-colors"
               role="button"
               aria-label="Shop Now"
             >
               Shop Now
-            </Link>
+            </a>
             <div className="flex flex-col sm:flex-row items-center justify-between gap-8 my-8">
               {/* 1 */}
               <div className="text-center px-4">
@@ -80,18 +79,20 @@ export const HeroSection = () => {
               src={star}
               className="absolute top-1/12 right-1/12 w-12 sm:w-16"
               loading="lazy"
-              alt="star img"
+              aria-hidden={true}
+              alt=""
             />
             <img
               src={star}
               className="absolute top-1/2 left-0 w-8 sm:w-16"
               loading="lazy"
-              alt="star img"
+              aria-hidden={true}
+              alt=""
             />
           </motion.div>
         </div>
       </div>
-      <div className=" w-full min-h-20 lg:min-h-[97px] bg-black text-white flex items-center">
+      <div className=" w-full min-h-20 lg:min-h-[97px] bg-black text-white flex items-center ">
         <div className="container mx-auto px-5 md:px-8 flex flex-wrap justify-between items-center gap-2 text-[20px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
           <span className="uppercase font-extrabold">versace</span>
           <span className="uppercase font-extrabold">zara</span>

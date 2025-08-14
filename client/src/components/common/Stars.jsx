@@ -1,5 +1,4 @@
 import { Star, StarHalf } from "lucide-react";
-import React from "react";
 
 export const Stars = ({ rating }) => {
   let stars = [];

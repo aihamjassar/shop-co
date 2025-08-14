@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-export const NavItem = ({ to, children }) => {
+export const NavItem = ({ to, closeSidebar, children }) => {
   return (
     <NavLink
       to={to}
@@ -9,6 +9,7 @@ export const NavItem = ({ to, children }) => {
           ? "text-blue-700 font-bold"
           : "text-white md:text-black transition-colors duration-300 hover:text-blue-700"
       }
+      onClick={closeSidebar}
     >
       {children}
     </NavLink>
