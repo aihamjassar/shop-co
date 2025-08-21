@@ -154,7 +154,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
   if (!user) return next(new ApiError("Token is invalid or has expired", 400));
 
-  user.password = req.body.password;
+  user.password = req.body.newPassword;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   await user.save();

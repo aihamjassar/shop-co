@@ -1,7 +1,7 @@
 npm install react-rating-stars-component
 npm install classNames 
 خلي التصميم حيوي يساعد على التعلم
-
+مثال لرد (Response) احترافي للـ API، بحيث يحتوي على الـ data + meta information:
 import React from "react";
 
 class ErrorBoundary extends React.Component {

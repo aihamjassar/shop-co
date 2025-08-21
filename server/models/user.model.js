@@ -38,22 +38,6 @@ const userSchema = new mongoose.Schema(
     passwordResetExpires: {
       type: Date,
     },
-    cartItems: {
-      type: [
-        {
-          quantity: {
-            type: Number,
-            default: 1,
-            min: 1,
-          },
-          product: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Product",
-            required: true,
-          },
-        },
-      ],
-    },
     role: {
       type: String,
       enum: ["customer", "admin"],

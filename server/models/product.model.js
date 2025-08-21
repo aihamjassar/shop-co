@@ -12,20 +12,23 @@ const productSchema = new mongoose.Schema(
     },
     slug: {
       type: String,
-      required: true,
-      lowerCase: true,
+      lowercase: true,
     },
     description: {
       type: String,
       required: [true, "Product description is required"],
       minlength: [20, "Too short description"],
-      maxlength: [300, "Too long description"],
+      maxlength: [1000, "Too long description"],
       trim: true,
     },
     quantity: {
       type: Number,
       required: [true, "Product quantity is required"],
       min: [0, "Quantity cannot be negative"],
+    },
+    sold: {
+      type: Number,
+      default: 0,
     },
     price: {
       type: Number,
@@ -47,14 +50,14 @@ const productSchema = new mongoose.Schema(
     },
     imageCover: {
       type: String,
-      required: [true, "Image cover is required"],
+      required: [true, "Product image cover is required"],
     },
     images: {
       type: [String],
     },
     ratingsAverage: {
       type: Number,
-      min: [1, "Rating must be above or equal 1.0"],
+      min: [0.5, "Rating must be above or equal 0.5"],
       max: [5, "Rating must be below or equal 5.0"],
     },
     ratingsQuantity: {
@@ -67,6 +70,7 @@ const productSchema = new mongoose.Schema(
     },
     category: {
       type: String, // Men, Women, Kids
+      required: [true, "Product must be belong to a category"],
     },
     subcategory: {
       type: String, // T-shirt, pants, Jackets, shoes, ...
@@ -76,8 +80,17 @@ const productSchema = new mongoose.Schema(
 );
 
 productSchema.pre("save", function (next) {
-  if (!this.isModified("slug")) return next();
+  if (!this.isModified("title")) return next();
   this.slug = slugify(this.title, { lower: true, strict: true });
+  next();
+});
+
+productSchema.pre("findOneAndUpdate", function (next) {
+  if (this._update.title)
+    this._update.slug = slugify(this._update.title, {
+      lower: true,
+      strict: true,
+    });
   next();
 });
 

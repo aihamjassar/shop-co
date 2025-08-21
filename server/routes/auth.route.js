@@ -19,6 +19,7 @@ router.post("/login", loginValidator, login);
 router.get("/refresh-token", refreshToken);
 router.post("/logout", logout);
 router.post("/forget-password", forgetPassword);
+// TODO create reset password validator
 router.patch("/reset-password/:token", resetPassword);
 
 module.exports = router;

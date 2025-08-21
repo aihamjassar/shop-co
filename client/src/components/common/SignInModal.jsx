@@ -1,14 +1,31 @@
 import { AppleDark, Google } from "@ridemountainpig/svgl-react";
 import { Key, Mail, X } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../store/thunks/authThunk";
 
-export const SignInModal = ({ dispatch }) => {
+export const SignInModal = ({ dispatch: modalDispatch }) => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const reduxDispatch = useDispatch();
+  const { status, errors, user } = useSelector((store) => store.auth);
+  console.log(errors.login)
+  console.log(user)
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    reduxDispatch(login(formData));
+  };
+
   return (
     <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 tr z-40 w-lg max-w-11/12 h-[600px] px-3 py-10 bg-white rounded-2xl shadow-2xl border-2 border-black">
       <button
         type="button"
         className="absolute top-5 right-5 cursor-pointer hover:bg-gray-200"
-        onClick={() => dispatch({ type: "CLOSE_MODAL" })}
+        onClick={() => modalDispatch({ type: "CLOSE_MODAL" })}
         role="button"
         aria-label="Close sign in modal"
       >
@@ -30,7 +47,7 @@ export const SignInModal = ({ dispatch }) => {
         </button>
       </div>
       <div className="w-full h-[1px] bg-black my-7 relative after:content-['or'] after:absolute after:w-fit after:bg-white after:p-1 after:h-fit after:-top-4.5 after:left-1/2" />
-      <form className="space-y-5">
+      <form className="space-y-5" onSubmit={handleSubmit}>
         <label htmlFor="email2" className="block ml-1 mb-1.5">
           Email
         </label>
@@ -38,9 +55,12 @@ export const SignInModal = ({ dispatch }) => {
           <Mail className="absolute top-1/2 left-3 -translate-y-1/2 size-5 text-black/50" />
           <input
             type="email"
+            name="email"
             id="email2"
             placeholder="Name@example.com"
             className="w-full h-10 border border-black/50 rounded-2xl pl-10 focus:outline-none"
+            value={formData.email}
+            onChange={handleChange}
           />
         </div>
         <label htmlFor="password" className="block ml-1 mb-1.5">
@@ -50,23 +70,27 @@ export const SignInModal = ({ dispatch }) => {
           <Key className="absolute top-1/2 left-3 -translate-y-1/2 size-5 text-black/50" />
           <input
             type="password"
+            name="password"
             id="password"
             placeholder="******"
             className="w-full h-10 border border-black/50 rounded-2xl pl-10 focus:outline-none"
+            value={formData.password}
+            onChange={handleChange}
           />
         </div>
         <button
+          type="submit"
           className="w-full h-12 rounded-2xl bg-black text-white font-bold cursor-pointer"
           role="button"
           aria-label="Open sign in modal"
         >
-          Sign in
+          {status.login === "loading" ? "Logging..." : "Sign in"}
         </button>
       </form>
       <p className="text-center mt-5">
-        Already have an account{" "}
+        Don’t have an account?{" "}
         <Link to={""} className="text-blue-500">
-          Login
+          Sign up
         </Link>
       </p>
     </div>
