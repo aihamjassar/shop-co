@@ -48,6 +48,7 @@ export const Header = forwardRef((props, ref) => {
         aria-label="Main Navigation"
         ref={ref}
       >
+        
         {(state.isSidebarOpen || state.isModalOpen) && (
           <div
             className="absolute top-0 left-0 w-screen h-screen bg-black/30 backdrop-blur-sm backdrop-saturate-50 backdrop-brightness-50 z-40"

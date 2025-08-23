@@ -1,6 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { ScrollToTop } from "./components/common/ScrollToTop";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { refreshToken } from "./store/thunks/authThunk";
 
 const Layout = lazy(() =>
   import("./pages/Layout").then((module) => ({ default: module.Layout }))
@@ -30,6 +33,12 @@ const NotFoundPage = lazy(() =>
 );
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(refreshToken());
+  }, [dispatch]);
+
   return (
     <>
       <ScrollToTop />

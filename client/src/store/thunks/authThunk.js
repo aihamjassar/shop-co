@@ -6,7 +6,7 @@ export const register = createAsyncThunk(
   async (userDate, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.post("/auth/register", userDate);
-      return data;
+      return { user: data.data };
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Register failed"
@@ -20,7 +20,7 @@ export const login = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.post("/auth/login", credentials);
-      return data;
+      return { user: data.data };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Login failed");
     }
@@ -31,8 +31,8 @@ export const refreshToken = createAsyncThunk(
   "auth/refreshToken",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.get("/auth/refresh-token");
-      return data;
+      const { data } = await axiosInstance.post("/auth/refresh-token");
+      return { user: data.data };
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Session expired, please login again"
@@ -60,7 +60,7 @@ export const forgetPassword = createAsyncThunk(
       const { data } = await axiosInstance.post("/auth/forget-password", {
         email,
       });
-      return data;
+      return { resetURL: data.data };
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to send reset email"
@@ -79,7 +79,7 @@ export const resetPassword = createAsyncThunk(
           newPassword,
         }
       );
-      return data;
+      return { user: data.data };
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Password reset failed"

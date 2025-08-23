@@ -1,24 +1,41 @@
-import { AppleDark, Google } from "@ridemountainpig/svgl-react";
-import { Key, Mail, X } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { Key, Mail, X } from "lucide-react";
+import { AppleDark, Google } from "@ridemountainpig/svgl-react";
+import { clearError } from "../../store/slices/auth.Slice";
 import { login } from "../../store/thunks/authThunk";
 
 export const SignInModal = ({ dispatch: modalDispatch }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const reduxDispatch = useDispatch();
-  const { status, errors, user } = useSelector((store) => store.auth);
-  console.log(errors.login)
-  console.log(user)
+  const { status, errors } = useSelector((store) => store.auth);
+
+  useEffect(() => {
+    return () => reduxDispatch(clearError("login"));
+  }, [reduxDispatch]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors.login) reduxDispatch(clearError("login"));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     reduxDispatch(login(formData));
   };
+
+  useEffect(() => {
+    let timer;
+    if (status.login === "succeeded")
+      timer = setTimeout(() => {
+        modalDispatch({ type: "CLOSE_MODAL" });
+      }, 500);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [status.login, modalDispatch]);
 
   return (
     <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 tr z-40 w-lg max-w-11/12 h-[600px] px-3 py-10 bg-white rounded-2xl shadow-2xl border-2 border-black">
@@ -47,6 +64,7 @@ export const SignInModal = ({ dispatch: modalDispatch }) => {
         </button>
       </div>
       <div className="w-full h-[1px] bg-black my-7 relative after:content-['or'] after:absolute after:w-fit after:bg-white after:p-1 after:h-fit after:-top-4.5 after:left-1/2" />
+      {errors.login && <p className="text-sm text-red-600">* {errors.login}</p>}
       <form className="space-y-5" onSubmit={handleSubmit}>
         <label htmlFor="email2" className="block ml-1 mb-1.5">
           Email
@@ -83,8 +101,13 @@ export const SignInModal = ({ dispatch: modalDispatch }) => {
           className="w-full h-12 rounded-2xl bg-black text-white font-bold cursor-pointer"
           role="button"
           aria-label="Open sign in modal"
+          disabled={status.login === "loading"}
         >
-          {status.login === "loading" ? "Logging..." : "Sign in"}
+          {status.login === "loading"
+            ? "Logging..."
+            : status.login === "succeeded"
+            ? "Login successful"
+            : "Sign in"}
         </button>
       </form>
       <p className="text-center mt-5">

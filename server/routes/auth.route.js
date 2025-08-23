@@ -16,7 +16,7 @@ const {
 
 router.post("/register", registerValidator, register);
 router.post("/login", loginValidator, login);
-router.get("/refresh-token", refreshToken);
+router.post("/refresh-token", refreshToken);
 router.post("/logout", logout);
 router.post("/forget-password", forgetPassword);
 // TODO create reset password validator

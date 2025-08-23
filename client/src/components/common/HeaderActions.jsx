@@ -1,9 +1,9 @@
-import { LogOut, Search, ShoppingCartIcon, User } from "lucide-react";
 import { Link } from "react-router-dom";
+import { LogOut, Search, ShoppingCartIcon, User } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export const HeaderActions = ({ dispatch }) => {
-  const isSigning = false;
-  const userId = 1;
+  const { user, isAuthenticate } = useSelector(state => state.auth);
 
   return (
     <div className="flex items-center gap-2.5">
@@ -23,7 +23,7 @@ export const HeaderActions = ({ dispatch }) => {
           placeholder="Search for products..."
         />
       </div>
-      <Link to={`/cart/${userId}`} className="relative">
+      <Link to={`/cart/${user?._id}`} className="relative">
         <ShoppingCartIcon
           className="cursor-pointer transition-colors duration-300 rounded-md hover:bg-gray-200"
           aria-label="Shopping Cart"
@@ -32,9 +32,9 @@ export const HeaderActions = ({ dispatch }) => {
           1
         </span>
       </Link>
-      {isSigning ? (
+      {isAuthenticate ? (
         <button className="flex justify-center items-center gap-1.5 w-28 h-12 rounded-xl shadow-md bg-black text-white cursor-pointer">
-          <LogOut /> Log out
+          <LogOut size={20} /> Log out
         </button>
       ) : (
         <button

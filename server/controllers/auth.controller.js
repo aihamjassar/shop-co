@@ -29,8 +29,9 @@ exports.register = asyncHandler(async (req, res, next) => {
 
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
-
+  
   const user = await User.findOne({ email }).select("+password");
+
   if (!user || !(await user.comparePassword(password)))
     return next(new ApiError("Incorrect E-mail or password", 401));
 
