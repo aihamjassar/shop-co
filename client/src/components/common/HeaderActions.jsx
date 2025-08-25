@@ -1,19 +1,19 @@
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/thunks/authThunk";
 import { LogOut, Search, ShoppingCartIcon, User } from "lucide-react";
-import { useSelector } from "react-redux";
 
-export const HeaderActions = ({ dispatch }) => {
-  const { user, isAuthenticate } = useSelector(state => state.auth);
+export const HeaderActions = ({ dispatch: modalDispatch }) => {
+  const { user, status, isAuthenticate } = useSelector((state) => state.auth);
+  const reduxDispatch = useDispatch();
 
   return (
     <div className="flex items-center gap-2.5">
-      <div
-        className="flex items-center gap-2.5  p-1 sm:py-1.5 sm:px-2.5 bg-white sm:bg-gray-100 rounded-2xl hover:bg-gray-200"
-        onClick={() => dispatch({ type: "OPEN_SEARCHBAR" })}
-      >
+      <div className="flex items-center gap-2.5  p-1 sm:py-1.5 sm:px-2.5 bg-white sm:bg-gray-100 rounded-2xl hover:bg-gray-200">
         <Search
           aria-label="Search bar"
           className="cursor-pointer sm:cursor-auto"
+          onClick={() => modalDispatch({ type: "OPEN_SEARCHBAR" })}
         />
         <input
           type="text"
@@ -23,7 +23,13 @@ export const HeaderActions = ({ dispatch }) => {
           placeholder="Search for products..."
         />
       </div>
-      <Link to={`/cart/${user?._id}`} className="relative">
+      <Link
+        to={isAuthenticate ? `/cart/${user?._id}` : "#"}
+        className="relative"
+        onClick={() => {
+          !isAuthenticate && modalDispatch({ type: "OPEN_SIGNIN_MODAL" });
+        }}
+      >
         <ShoppingCartIcon
           className="cursor-pointer transition-colors duration-300 rounded-md hover:bg-gray-200"
           aria-label="Shopping Cart"
@@ -33,13 +39,23 @@ export const HeaderActions = ({ dispatch }) => {
         </span>
       </Link>
       {isAuthenticate ? (
-        <button className="flex justify-center items-center gap-1.5 w-28 h-12 rounded-xl shadow-md bg-black text-white cursor-pointer">
-          <LogOut size={20} /> Log out
+        <button
+          className="flex justify-center items-center gap-1.5 w-28 h-12 rounded-xl shadow-md bg-black text-white cursor-pointer"
+          disabled={status.logout === "loading"}
+          onClick={() => reduxDispatch(logout())}
+        >
+          {status.logout === "loading" ? (
+            "Logging out..."
+          ) : (
+            <>
+              <LogOut size={20} /> Log out
+            </>
+          )}
         </button>
       ) : (
         <button
           className="flex justify-center items-center gap-1.5 w-28 h-12 rounded-xl shadow-md bg-black text-white cursor-pointer"
-          onClick={() => dispatch({ type: "OPEN_MODAL" })}
+          onClick={() => modalDispatch({ type: "OPEN_SIGNIN_MODAL" })}
         >
           <User /> Sign in
         </button>

@@ -27,6 +27,34 @@ export const login = createAsyncThunk(
   }
 );
 
+export const loginWithGoogle = createAsyncThunk(
+  "auth/google",
+  async (access_token, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.post("/auth/google", {
+        access_token,
+      });
+      return { user: data.data };
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Sign up failed");
+    }
+  }
+);
+
+export const loginWithApple = createAsyncThunk(
+  "auth/apple",
+  async (code, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.post("/auth/apple", {
+        code,
+      });
+      return { user: data.data };
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Sign up failed");
+    }
+  }
+);
+
 export const refreshToken = createAsyncThunk(
   "auth/refreshToken",
   async (_, { rejectWithValue }) => {
@@ -53,13 +81,14 @@ export const logout = createAsyncThunk(
   }
 );
 
-export const forgetPassword = createAsyncThunk(
-  "auth/forgetPassword",
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
   async (email, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.post("/auth/forget-password", {
+      const { data } = await axiosInstance.post("/auth/forgot-password", {
         email,
       });
+
       return { resetURL: data.data };
     } catch (error) {
       return rejectWithValue(
@@ -71,13 +100,11 @@ export const forgetPassword = createAsyncThunk(
 
 export const resetPassword = createAsyncThunk(
   "auth/resetPassword",
-  async ({ token, newPassword }, { rejectWithValue }) => {
+  async ({ token, formData }, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.patch(
         `/auth/reset-password/${token}`,
-        {
-          newPassword,
-        }
+        formData
       );
       return { user: data.data };
     } catch (error) {

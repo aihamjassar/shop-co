@@ -5,11 +5,15 @@ import { SidebarMenu } from "./../common/SidebarMenu";
 import { SignInModal } from "./SignInModal";
 import { MobileSearchbar } from "./MobileSearchbar";
 import { HeaderActions } from "./HeaderActions";
+import { SignUpModal } from "./SignupModal";
+import { ForgotPasswordModal } from "./ForgotPasswordModal";
 
 const initialState = {
   isSidebarOpen: false,
   isSearchbarOpen: false,
-  isModalOpen: false,
+  isSigninModalOpen: false,
+  isSignupModalOpen: false,
+  isForgotPasswordModalOpen: false,
 };
 
 function reducer(state, action) {
@@ -22,10 +26,20 @@ function reducer(state, action) {
       return { ...state, isSearchbarOpen: true };
     case "CLOSE_SEARCHBAR":
       return { ...state, isSearchbarOpen: false };
-    case "OPEN_MODAL":
-      return { ...state, isModalOpen: true };
-    case "CLOSE_MODAL":
-      return { ...state, isModalOpen: false };
+    case "OPEN_SIGNIN_MODAL":
+      return { ...state, isSigninModalOpen: true };
+    case "CLOSE_SIGNIN_MODAL":
+      return { ...state, isSigninModalOpen: false };
+    case "OPEN_SIGNUP_MODAL":
+      return { ...state, isSignupModalOpen: true };
+    case "CLOSE_SIGNUP_MODAL":
+      return { ...state, isSignupModalOpen: false };
+    case "OPEN_FORGOT_PASSWORD_MODAL":
+      return { ...state, isForgotPasswordModalOpen: true };
+    case "CLOSE_FORGOT_PASSWORD_MODAL":
+      return { ...state, isForgotPasswordModalOpen: false };
+    case "CLOSE_ALL":
+      return { ...initialState };
     default:
       return state;
   }
@@ -33,14 +47,22 @@ function reducer(state, action) {
 
 export const Header = forwardRef((props, ref) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const isOpenOverlay =
+    state.isSidebarOpen ||
+    state.isSigninModalOpen ||
+    state.isSignupModalOpen ||
+    state.isForgotPasswordModalOpen;
   const sideMenuClass = state.isSidebarOpen
     ? "translate-x-0"
     : "-translate-x-full";
 
   return (
     <>
-      {state.isModalOpen && <SignInModal dispatch={dispatch} />}
+      {state.isSigninModalOpen && <SignInModal dispatch={dispatch} />}
+      {state.isSignupModalOpen && <SignUpModal dispatch={dispatch} />}
+      {state.isForgotPasswordModalOpen && (
+        <ForgotPasswordModal dispatch={dispatch} />
+      )}
 
       <header
         className="fixed inset-0 w-full h-18 z-30 flex items-center bg-white shadow-md"
@@ -48,13 +70,11 @@ export const Header = forwardRef((props, ref) => {
         aria-label="Main Navigation"
         ref={ref}
       >
-        
-        {(state.isSidebarOpen || state.isModalOpen) && (
+        {isOpenOverlay && (
           <div
             className="absolute top-0 left-0 w-screen h-screen bg-black/30 backdrop-blur-sm backdrop-saturate-50 backdrop-brightness-50 z-40"
             onClick={() => {
-              dispatch({ type: "CLOSE_SIDEBAR" });
-              dispatch({ type: "CLOSE_MODAL" });
+              dispatch({ type: "CLOSE_ALL" });
             }}
           />
         )}

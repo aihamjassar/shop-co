@@ -10,8 +10,49 @@ const {
   generateRefreshToken,
   sendTokensAsCookies,
 } = require("../utils/generateTokens");
+const { OAuth2Client } = require("google-auth-library");
 const { sendEmail, verifyTransport } = require("../utils/sendEmail");
 const { resetPasswordTemplate } = require("../utils/emailTemplates");
+const axios = require("axios");
+
+function generateAppleClientSecret() {
+  const claims = {
+    iss: process.env.APPLE_TEAM_ID,
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 15777000,
+    aud: "https://appleid.apple.com",
+    sub: process.env.APPLE_CLIENT_ID,
+  };
+
+  return jwt.sign(claims, process.env.APPLE_PRIVATE_KEY.replace(/\\/g, "\n"), {
+    algorithm: "ES256",
+    keyid: process.env.APPLE_KEY_ID,
+  });
+}
+
+async function getAppleTokens(code) {
+  const clientSecret = generateAppleClientSecret();
+
+  const params = new URLSearchParams();
+  params.append("client_id", process.env.APPLE_CLIENT_ID);
+  params.append("client_secret", clientSecret);
+  params.append("code", code);
+  params.append("grant_type", "authorization_code");
+
+  const response = await axios.post(
+    "https://appleid.apple.com/auth/token",
+    params,
+    {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    }
+  );
+
+  return response.data;
+}
+
+function parseAppleIdToken(id_token) {
+  return jwt.decode(id_token);
+}
 
 exports.register = asyncHandler(async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -29,7 +70,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
-  
+
   const user = await User.findOne({ email }).select("+password");
 
   if (!user || !(await user.comparePassword(password)))
@@ -43,6 +84,85 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   user.password = undefined;
   res.status(200).json({ data: user });
+});
+
+exports.loginWithGoogle = asyncHandler(async (req, res, next) => {
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+  const { access_token } = req.body;
+
+  let data;
+  try {
+    const response = await axios.get(
+      "https://www.googleapis.com/oauth2/v2/userinfo",
+      {
+        headers: { Authorization: `Bearer ${access_token}` },
+      }
+    );
+
+    data = response.data;
+  } catch (error) {
+    return next(new ApiError("Google auth failed", 500));
+  }
+  const { name: username, email } = data;
+
+  let user = await User.findOne({ email });
+  let isNew = false;
+
+  if (!user) {
+    user = await User.create({
+      username,
+      email,
+      password: crypto.randomBytes(16).toString("hex"),
+    });
+    isNew = true;
+  }
+
+  const accessToken = generateAccessToken(user._id);
+  const refreshToken = generateRefreshToken(user._id);
+
+  await storeRefreshToken(user._id, refreshToken);
+  sendTokensAsCookies(res, accessToken, refreshToken);
+
+  user.password = undefined;
+  res.status(isNew ? 201 : 200).json({ data: user });
+});
+
+exports.loginWithApple = asyncHandler(async (req, res, next) => {
+  const { code } = req.body;
+  let data;
+
+  try {
+    const token = await getAppleTokens(code);
+    const appleUser = parseAppleIdToken(token.id_token);
+
+    data = appleUser;
+  } catch (error) {
+    return next(new ApiError("Apple auth failed", 500));
+  }
+
+  const { email } = data;
+
+  let user = await User.findOne({ email });
+  let isNew = false;
+
+  if (!user) {
+    user = await User.create({
+      username: data.name || email.split("@")[0],
+      email,
+      password: crypto.randomBytes(16).toString("hex"),
+    });
+    isNew = true;
+  }
+
+  const accessToken = generateAccessToken(user._id);
+  const refreshToken = generateRefreshToken(user._id);
+
+  await storeRefreshToken(user._id, refreshToken);
+  sendTokensAsCookies(res, accessToken, refreshToken);
+
+  user.password = undefined;
+  res.status(isNew ? 201 : 200).json({ data: user });
 });
 
 exports.refreshToken = asyncHandler(async (req, res, next) => {
@@ -103,7 +223,7 @@ exports.logout = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: "Logged out successfully" });
 });
 
-exports.forgetPassword = asyncHandler(async (req, res, next) => {
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
 
   const user = await User.findOne({ email });
@@ -133,9 +253,7 @@ exports.forgetPassword = asyncHandler(async (req, res, next) => {
       html,
     });
 
-    res
-      .status(200)
-      .json({ message: "Password rest token sent to email", resetURL });
+    res.status(200).json({ message: "Password rest token sent to email" });
   } catch (error) {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;

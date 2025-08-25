@@ -2,9 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   register,
   login,
+  loginWithGoogle,
+  loginWithApple,
   refreshToken,
   logout,
-  forgetPassword,
+  forgotPassword,
   resetPassword,
 } from "../thunks/authThunk";
 
@@ -13,17 +15,21 @@ const initialState = {
   status: {
     register: "idle",
     login: "idle",
+    google: "idle",
+    apple: "idle",
     refreshToken: "idle",
     logout: "idle",
-    forgetPassword: "idle",
+    forgotPassword: "idle",
     resetPassword: "idle",
   },
   errors: {
     register: null,
     login: null,
+    google: null,
+    apple: null,
     refreshToken: null,
     logout: null,
-    forgetPassword: null,
+    forgotPassword: null,
     resetPassword: null,
   },
   isAuthenticate: false,
@@ -50,15 +56,11 @@ const authSlice = createSlice({
 
     const handleFulfilled = (field) => (state, action) => {
       if (field === "logout") {
-        state.status[field] = "idle";
-        state.user = null;
-        state.isAuthenticate = false;
+        Object.assign(state, initialState);
       } else {
         state.status[field] = "succeeded";
-        if (action.payload?.user) {
-          state.user = action.payload.user;
-          state.isAuthenticate = true;
-        }
+        state.user = action.payload?.user || null;
+        state.isAuthenticate = !!state.user;
       }
     };
 
@@ -71,11 +73,19 @@ const authSlice = createSlice({
       .addCase(register.pending, handlePending("register"))
       .addCase(register.fulfilled, handleFulfilled("register"))
       .addCase(register.rejected, handleRejected("register"));
-
     builder
       .addCase(login.pending, handlePending("login"))
       .addCase(login.fulfilled, handleFulfilled("login"))
       .addCase(login.rejected, handleRejected("login"));
+    builder
+      .addCase(loginWithGoogle.pending, handlePending("google"))
+      .addCase(loginWithGoogle.fulfilled, handleFulfilled("google"))
+      .addCase(loginWithGoogle.rejected, handleRejected("google"));
+
+    builder
+      .addCase(loginWithApple.pending, handlePending("apple"))
+      .addCase(loginWithApple.fulfilled, handleFulfilled("apple"))
+      .addCase(loginWithApple.rejected, handleRejected("apple"));
 
     builder
       .addCase(refreshToken.pending, handlePending("refreshToken"))
@@ -88,9 +98,9 @@ const authSlice = createSlice({
       .addCase(logout.rejected, handleRejected("logout"));
 
     builder
-      .addCase(forgetPassword.pending, handlePending("forgetPassword"))
-      .addCase(forgetPassword.fulfilled, handleFulfilled("forgetPassword"))
-      .addCase(forgetPassword.rejected, handleRejected("forgetPassword"));
+      .addCase(forgotPassword.pending, handlePending("forgotPassword"))
+      .addCase(forgotPassword.fulfilled, handleFulfilled("forgotPassword"))
+      .addCase(forgotPassword.rejected, handleRejected("forgotPassword"));
 
     builder
       .addCase(resetPassword.pending, handlePending("resetPassword"))

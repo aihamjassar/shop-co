@@ -26,6 +26,11 @@ const CartPage = lazy(() =>
     default: module.CartPage,
   }))
 );
+const ResetPasswordPage = lazy(() =>
+  import("./pages/ResetPasswordPage").then((module) => ({
+    default: module.ResetPasswordPage,
+  }))
+);
 const NotFoundPage = lazy(() =>
   import("./pages/NotFoundPage").then((module) => ({
     default: module.NotFoundPage,
@@ -49,6 +54,10 @@ function App() {
             <Route path="products" element={<ProductsPage />} />
             <Route path="details/:id" element={<ProductDetailsPage />} />
             <Route path="cart/:id" element={<CartPage />} />
+            <Route
+              path="reset-password/:token"
+              element={<ResetPasswordPage />}
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
