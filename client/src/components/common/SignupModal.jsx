@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Key, Mail, User, X } from "lucide-react";
+import { Eye, EyeClosed, Key, Mail, User, X } from "lucide-react";
 import { AppleDark, Google } from "@ridemountainpig/svgl-react";
 import { clearError } from "../../store/slices/auth.Slice";
 import { register, loginWithGoogle } from "../../store/thunks/authThunk";
@@ -13,6 +13,7 @@ export const SignUpModal = ({ dispatch: modalDispatch }) => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const reduxDispatch = useDispatch();
   const { status, errors } = useSelector((store) => store.auth);
@@ -128,7 +129,7 @@ export const SignUpModal = ({ dispatch: modalDispatch }) => {
         <div className="relative w-full h-fit">
           <Key className="absolute top-1/2 left-3 -translate-y-1/2 size-5 text-black/50" />
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             id="password"
             placeholder="******"
@@ -136,6 +137,13 @@ export const SignUpModal = ({ dispatch: modalDispatch }) => {
             value={formData.password}
             onChange={handleChange}
           />
+          <button
+            className="absolute top-1/2 right-3 -translate-y-1/2 size-fit cursor-pointer"
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
+          </button>
         </div>
         <button
           type="submit"

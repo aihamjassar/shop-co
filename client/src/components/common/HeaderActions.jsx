@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../store/thunks/authThunk";
-import { LogOut, Search, ShoppingCartIcon, User } from "lucide-react";
+import {  useSelector } from "react-redux";
+import {
+  Search,
+  ShoppingCartIcon,
+  User,
+  UserCircle,
+} from "lucide-react";
 
 export const HeaderActions = ({ dispatch: modalDispatch }) => {
-  const { user, status, isAuthenticate } = useSelector((state) => state.auth);
-  const reduxDispatch = useDispatch();
+  const { user, isAuthenticate } = useSelector((state) => state.auth);
 
   return (
     <div className="flex items-center gap-2.5">
@@ -39,19 +42,21 @@ export const HeaderActions = ({ dispatch: modalDispatch }) => {
         </span>
       </Link>
       {isAuthenticate ? (
-        <button
-          className="flex justify-center items-center gap-1.5 w-28 h-12 rounded-xl shadow-md bg-black text-white cursor-pointer"
-          disabled={status.logout === "loading"}
-          onClick={() => reduxDispatch(logout())}
-        >
-          {status.logout === "loading" ? (
-            "Logging out..."
-          ) : (
-            <>
-              <LogOut size={20} /> Log out
-            </>
-          )}
-        </button>
+        user.role === "admin" ? (
+          <Link
+            to={"/dashboard"}
+            className="flex justify-center items-center gap-1.5 w-28 h-12 rounded-xl shadow-md bg-black text-white cursor-pointer"
+          >
+            Dashboard
+          </Link>
+        ) : (
+          <Link
+            to={"/profile"}
+            className="flex justify-center items-center w-fit hover:bg-gray-200 rounded-full cursor-pointer"
+          >
+            <UserCircle size={35} />
+          </Link>
+        )
       ) : (
         <button
           className="flex justify-center items-center gap-1.5 w-28 h-12 rounded-xl shadow-md bg-black text-white cursor-pointer"
