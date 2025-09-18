@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const globalErrorHandler = require("./middlewares/globalErrorHandler.middleware");
 const morgan = require("morgan");
+const { v2: cloudinary } = require("cloudinary");
 
 const authRoute = require("./routes/auth.route");
 const userRoute = require("./routes/user.route");
@@ -12,9 +13,18 @@ const couponRoute = require("./routes/coupon.route");
 const paymentRoute = require("./routes/payment.route");
 const reviewRoute = require("./routes/review.route");
 const orderRoute = require("./routes/order.route");
+const uploadRoute = require("./routes/upload.route");
+const deleteImageRoute = require("./routes/deleteImage.route");
+
 const { webHookCheckout } = require("./controllers/payment.controller");
 
 const app = express();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 app.post(
   "/api/v1/payments/webhook",
@@ -27,6 +37,7 @@ app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
+app.use("/api/v1/test", (req, res) => res.json({ message: "Test-aiham-30ldekkkووتتتت" }));
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/products", productRoute);
@@ -35,6 +46,8 @@ app.use("/api/v1/coupons", couponRoute);
 app.use("/api/v1/payments", paymentRoute);
 app.use("/api/v1/reviews", reviewRoute);
 app.use("/api/v1/orders", orderRoute);
+app.use("/api/v1/upload-signature", uploadRoute);
+app.use("/api/v1/delete-image", deleteImageRoute);
 
 app.all("/{*splat}", (req, res, next) => {
   const ApiError = require("./utils/apiError");

@@ -7,6 +7,7 @@ import { store } from "./store/store.js";
 import App from "./App.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { UIProvider } from "./context/UIContext.jsx";
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -14,6 +15,37 @@ createRoot(document.getElementById("root")).render(
       <Provider store={store}>
         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
           <UIProvider>
+            <Toaster
+              position="top-right"
+              reverseOrder={false}
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: "#333",
+                  color: "#fff",
+                  borderRadius: "10px",
+                  padding: "12px 16px",
+                },
+                success: {
+                  style: {
+                    background: "#16a34a",
+                  },
+                  iconTheme: {
+                    primary: "#fff",
+                    secondary: "#16a34a",
+                  },
+                },
+                error: {
+                  style: {
+                    background: "#dc2626",
+                  },
+                  iconTheme: {
+                    primary: "#fff",
+                    secondary: "#dc2626",
+                  },
+                },
+              }}
+            />
             <App />
           </UIProvider>
         </GoogleOAuthProvider>

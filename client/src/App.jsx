@@ -52,6 +52,11 @@ const CreateProductPage = lazy(() =>
     default: module.CreateProductPage,
   }))
 );
+const UpdateProductPage = lazy(() =>
+  import("./pages/dashboard/UpdateProductPage").then((module) => ({
+    default: module.UpdateProductPage,
+  }))
+);
 const ProductDetailsPage = lazy(() =>
   import("./pages/ProductDetailsPage").then((module) => ({
     default: module.ProductDetailsPage,
@@ -118,6 +123,7 @@ function App() {
             <Route path="users" element={<UsersPage />} />
             <Route path="products" element={<ProductsDashboardPage />} />
             <Route path="create-product" element={<CreateProductPage />} />
+            <Route path="update-product/:id" element={<UpdateProductPage />} />
             <Route path="orders" element={<OrdersPage />} />
           </Route>
         </Routes>

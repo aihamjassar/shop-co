@@ -1,24 +1,18 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { handleUploadImage } from "../../utils/handleUploadImage";
-import { useDispatch, useSelector } from "react-redux";
-import { createProduct } from "../../store/thunks/productsThunk";
+import { useDispatch } from "react-redux";
+import { getProduct, updateProduct } from "../../store/thunks/productsThunk";
 import { toast } from "react-hot-toast";
+import { useParams } from "react-router-dom";
 import { axiosInstance } from "../../lib/axios";
 
-export const CreateProductPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({ defaultValues: { discount: 0, style: undefined } });
-
+export const UpdateProductPage = () => {
+  const [product, setProduct] = useState(null);
+  const reduxDispatch = useDispatch();
+  const { id: productId } = useParams();
   const [preview, setPreview] = useState(null);
   const [imagesPreview, setImagesPreview] = useState([]);
-
-  const reduxDispatch = useDispatch();
-  const { status } = useSelector((state) => state.products);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -28,37 +22,63 @@ export const CreateProductPage = () => {
   const handleImagesChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
-      setImagesPreview(files.map((file) => URL.createObjectURL(file)));
+      setImagesPreview((preState) => [
+        ...preState,
+        ...files.map((file) => URL.createObjectURL(file)),
+      ]);
     }
   };
 
+  console.log(imagesPreview);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({ defaultValues: {} });
+
+  useEffect(() => {
+    if (!productId) return;
+    const fetchProduct = async () => {
+      try {
+        const result = await reduxDispatch(getProduct(productId)).unwrap();
+        setProduct(result.product);
+        reset({
+          ...result.product,
+          colors: result.product.colors.join(","),
+          sizes: result.product.sizes.join(","),
+        });
+        setPreview(result.product.imageCover);
+        setImagesPreview(result.product.images);
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+    fetchProduct();
+  }, [reduxDispatch, productId, reset]);
+
   const onSubmit = async (data) => {
     let uploadedImages = [];
-    const imageCoverFile = data.imageCover[0];
-    const { secure_url: imageCoverUrl, public_id } = await handleUploadImage(
-      imageCoverFile,
-      {
-        folder: "products/covers",
-        width: 800,
-        height: 800,
-      }
-    );
+    let imageCoverUrl = product.imageCover;
+    let imagesUrls = product.images;
 
-    uploadedImages.push({ public_id, folder: "products/covers" });
+    if (data.imageCover && data.imageCover.length > 0) {
+      const { secure_url, public_id } = await handleUploadImage(
+        data.imageCover[0],
+        { folder: "products/covers" }
+      );
+      imageCoverUrl = secure_url;
+      uploadedImages.push(public_id);
+    }
 
-    let imagesUrls = [];
     if (data.images && data.images.length > 0) {
-      imagesUrls = await Promise.all(
-        Array.from(data.images || []).map(async (file) => {
+      const files = Array.from(data.images || []);
+      imageCoverUrl = await Promise.all(
+        files.map(async (file) => {
           const result = await handleUploadImage(file, {
             folder: "products/gallery",
-            width: 600,
-            height: 600,
           });
-          uploadedImages.push({
-            public_id: result.public_id,
-            folder: "products/gallery",
-          });
+          uploadedImages.push(result.public_id);
           return result.secure_url;
         })
       );
@@ -74,25 +94,20 @@ export const CreateProductPage = () => {
       imageCover: imageCoverUrl,
       images: imagesUrls,
     };
-    let success = false;
-    try {
-      await reduxDispatch(createProduct(productData)).unwrap();
-      toast.success("Product created successfully");
-      reset();
-      setPreview(null);
-      setImagesPreview([]);
-      success = true;
-    } catch (error) {
-      toast.error(error?.message || "Something went wrong");
-    } finally {
-      if (success && uploadedImages.length > 0) {
-        await Promise.all(
-          uploadedImages.map(({ public_id, folder }) =>
-            axiosInstance.post("/delete-image", { public_id, folder })
-          )
-        );
-      }
-    }
+
+    reduxDispatch(updateProduct({ id: productId, product: productData }))
+      .unwrap()
+      .then(() => toast.success("Product updated successfully"))
+      .catch(async (err) => {
+        if (uploadedImages.length > 0) {
+          await Promise.all(
+            uploadedImages.map(({ public_id, folder }) =>
+              axiosInstance.post("/delete-image", { public_id, folder })
+            )
+          );
+        }
+        toast.error(err.message);
+      });
   };
 
   return (
@@ -302,9 +317,8 @@ export const CreateProductPage = () => {
       <button
         type="submit"
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        disabled={status === "loading"}
       >
-        {status === "loading" ? "creating..." : "create"}
+        Save
       </button>
     </form>
   );

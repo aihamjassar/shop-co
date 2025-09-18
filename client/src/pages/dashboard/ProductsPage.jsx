@@ -4,7 +4,7 @@ import {
   getAllProducts,
 } from "../../store/thunks/productsThunk";
 import { useEffect } from "react";
-import { Edit, Eye, Plus, Trash, Trash2 } from "lucide-react";
+import { Edit, Eye, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -58,9 +58,13 @@ export const ProductsPage = () => {
               <TableCell>{product.category}</TableCell>
               <TableCell>
                 <div className="space-x-2.5">
-                  <button className="cursor-pointer" title="Edit">
+                  <Link
+                    to={`/dashboard/update-product/${product._id}`}
+                    className="cursor-pointer inline-block"
+                    title="Edit"
+                  >
                     <Edit size={20} />
-                  </button>
+                  </Link>
                   <button
                     className="cursor-pointer"
                     title="Delete"
@@ -68,9 +72,13 @@ export const ProductsPage = () => {
                   >
                     <Trash2 size={20} />
                   </button>
-                  <button className="cursor-pointer" title="View">
+                  <Link
+                    to={"/details"}
+                    className="cursor-pointer inline-block"
+                    title="View"
+                  >
                     <Eye size={20} />
-                  </button>
+                  </Link>
                 </div>
               </TableCell>
             </TableRow>
