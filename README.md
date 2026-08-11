@@ -1,37 +1,62 @@
-# React + Vite
+# E-Commerce App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> A full-stack e-commerce application with a React storefront and dashboard, Express API, MongoDB, Stripe checkout, Cloudinary image management, product reviews, user profiles, and order-management screens.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This repository contains the source and supporting files for **E-Commerce App**. The documentation below was prepared from the current repository structure and implementation files so that setup expectations, project boundaries, and implemented capabilities are explicit.
 
-## Expanding the ESLint configuration
+## Technology
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Area | Implementation |
+| --- | --- |
+| Frontend | React and Vite client in client/ |
+| Backend | Express 5 server in server/ |
+| Data | MongoDB with Mongoose |
+| Payments | Stripe |
+| Media | Cloudinary |
+| Client state | Redux Toolkit slices and thunks |
 
-# HTTP Status Codes – Quick Reference
+## Key capabilities
 
-| Category              | Code | Name                  | Description                                                      | When to Use in Backend                                       |
-| --------------------- | ---- | --------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------ |
-| **1xx** Informational | 100  | Continue              | The server asks the client to continue sending the request body. | When uploading files or sending large data in chunks.        |
-|                       | 101  | Switching Protocols   | The server is switching protocols.                               | When upgrading from HTTP to WebSocket.                       |
-| **2xx** Success       | 200  | OK                    | The request has succeeded.                                       | When retrieving data or performing a successful operation.   |
-|                       | 201  | Created               | A new resource has been created.                                 | When registering a new user or adding a product.             |
-|                       | 202  | Accepted              | The request is accepted but not yet processed.                   | For async job processing.                                    |
-|                       | 204  | No Content            | Successful request but no content to return.                     | When deleting a resource or updating without returning data. |
-| **3xx** Redirection   | 301  | Moved Permanently     | The resource has been permanently moved.                         | When changing an API route or page URL.                      |
-|                       | 302  | Found                 | Temporary redirection.                                           | When moving a page temporarily.                              |
-|                       | 304  | Not Modified          | The resource has not changed.                                    | For cache optimization.                                      |
-| **4xx** Client Error  | 400  | Bad Request           | Invalid request syntax or parameters.                            | When sending malformed JSON or missing data.                 |
-|                       | 401  | Unauthorized          | Authentication required.                                         | When accessing an API without a token.                       |
-|                       | 403  | Forbidden             | Access is denied despite authentication.                         | When the user lacks permission.                              |
-|                       | 404  | Not Found             | The resource could not be found.                                 | When requesting a non-existent endpoint or file.             |
-|                       | 405  | Method Not Allowed    | HTTP method not allowed.                                         | When trying DELETE on a GET-only endpoint.                   |
-|                       | 409  | Conflict              | Data conflict occurred.                                          | When creating a resource with an existing unique field.      |
-|                       | 422  | Unprocessable Entity  | Data is well-formed but invalid.                                 | When validation fails.                                       |
-| **5xx** Server Error  | 500  | Internal Server Error | Generic server error.                                            | When an unhandled exception occurs.                          |
-|                       | 502  | Bad Gateway           | Invalid response from an upstream server.                        | In multi-server setups.                                      |
-|                       | 503  | Service Unavailable   | The server is temporarily unavailable.                           | During maintenance or high traffic.                          |
-|                       | 504  | Gateway Timeout       | The upstream server took too long to respond.                    | When another service is slow to reply.                       |
+| Area | Current implementation |
+| --- | --- |
+| Storefront | Includes product discovery, details, reviews, cart, and customer profile views. |
+| Operational dashboard | Provides account, users, product, orders, and product-management screens. |
+| API surface | Organizes commerce responsibilities into dedicated controller modules. |
+
+## Getting started
+
+Use the following workflow to work with the project locally.
+
+```bash
+git clone https://github.com/aihamjassar/ecommerce-app.git
+cd ecommerce-app
+npm install
+npm install --prefix client
+# Configure server environment values
+npm run dev
+# In another terminal: npm run dev --prefix client
+```
+
+## Project structure
+
+| Path | Purpose |
+| --- | --- |
+| client/src/pages/ | Catalog, product detail, cart, profile, password reset, and dashboard views |
+| client/src/store/ | Redux store, slices, and async thunks |
+| server/controllers/ | Auth, cart, coupon, orders, payments, products, reviews, and users |
+| server/models/ | Database models |
+| server/config/ | Database configuration |
+
+## Configuration notes
+
+Provide MongoDB, Stripe, Cloudinary, email, and authentication settings through a secured environment file. Validate all payment and image-upload flows with test credentials before launch.
+
+## License
+
+No license file is currently included. Confirm the intended licensing terms with the repository owner before reuse or distribution.
+
+## Maintainer
+
+Maintained by [Aiham Jassar](https://github.com/aihamjassar). Contributions, issue reports, and improvement suggestions are welcome through the repository.
