@@ -63,10 +63,4 @@ process.on("SIGTERM", () => shutdown("SIGTERM"));
 // Local shutdown with Ctrl+C
 process.on("SIGINT", () => shutdown("SIGINT"));
 
-startServer();  }
-});
-
-process.on("SIGABRT", () => {
-  console.log("📴 SIGTERM received. Shutting down gracefully...");
-  if (server) server.close(() => console.log("💤 Process terminated"));
-});
+startServer();
