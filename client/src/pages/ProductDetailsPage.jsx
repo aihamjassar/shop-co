@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ProductDetailsSection } from "../components/ProductDetails/productDetailsSection";
+import { ProductDetailsSection } from "../components/ProductDetails/ProductDetailsSection";
 import { ProductDetailsTab } from "../components/ProductDetails/ProductDetailsTab";
 import { RatingAndReviewsTab } from "../components/ProductDetails/RatingAndReviewsTab";
 import { FAQsTab } from "../components/ProductDetails/FAQsTab";
