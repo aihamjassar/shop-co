@@ -37,7 +37,7 @@ app.use(cookieParser());
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
-app.use("/api/v1/test", (req, res) => res.json({ message: "Test-aiham-30ldekkkووتتتت" }));
+app.use("/api/v1/test", (req, res) => res.json({ message: "Test-api" }));
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/products", productRoute);
@@ -48,6 +48,13 @@ app.use("/api/v1/reviews", reviewRoute);
 app.use("/api/v1/orders", orderRoute);
 app.use("/api/v1/upload-signature", uploadRoute);
 app.use("/api/v1/delete-image", deleteImageRoute);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+  app.get("{*splat}", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../client", "dist", "index.html"));
+  });
+}
 
 app.all("/{*splat}", (req, res, next) => {
   const ApiError = require("./utils/apiError");
