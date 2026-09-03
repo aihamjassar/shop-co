@@ -1,177 +1,65 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { Eye, EyeClosed, Key, Mail, User, X } from "lucide-react";
-import { AppleDark, Google } from "@ridemountainpig/svgl-react";
 import { clearError } from "../../store/slices/auth.Slice";
 import { register, loginWithGoogle } from "../../store/thunks/authThunk";
+import { Eye, EyeClosed, KeyRound, Mail, UserRound, X } from "lucide-react";
+import { Google } from "@ridemountainpig/svgl-react";
 import { useGoogleLogin } from "@react-oauth/google";
+import { AppleLoginButton } from "./AppleLoginButton";
+
+const fieldClass = "w-full rounded-xl border bg-white px-11 py-3 text-sm outline-none transition focus:border-black focus:ring-2 focus:ring-black/10";
 
 export const SignUpModal = ({ dispatch: modalDispatch }) => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ username: "", email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-
+  const [validation, setValidation] = useState({});
   const reduxDispatch = useDispatch();
   const { status, errors } = useSelector((store) => store.auth);
+  const busy = status.register === "loading" || status.google === "loading" || status.apple === "loading";
+  const passwordChecks = useMemo(() => ({ length: formData.password.length >= 6, upper: /[A-Z]/.test(formData.password), lower: /[a-z]/.test(formData.password), number: /\d/.test(formData.password) }), [formData.password]);
+  const passwordScore = Object.values(passwordChecks).filter(Boolean).length;
+  const googleLogin = useGoogleLogin({ onSuccess: ({ access_token }) => reduxDispatch(loginWithGoogle(access_token)) });
 
-  const login = useGoogleLogin({
-    onSuccess: (credentialResponse) => {
-      reduxDispatch(loginWithGoogle(credentialResponse.access_token));
-    },
-  });
-
+  useEffect(() => () => { reduxDispatch(clearError("register")); reduxDispatch(clearError("google")); }, [reduxDispatch]);
   useEffect(() => {
-    return () => {
-      reduxDispatch(clearError("register"));
-      reduxDispatch(clearError("google"));
-    };
-  }, [reduxDispatch]);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (errors.register || errors.google) {
-      reduxDispatch(clearError("register"));
-      reduxDispatch(clearError("google"));
+    if (status.register === "succeeded" || status.google === "succeeded" || status.apple === "succeeded") {
+      const timer = setTimeout(() => modalDispatch({ type: "CLOSE_SIGNUP_MODAL" }), 700);
+      return () => clearTimeout(timer);
     }
+  }, [status.register, status.google, status.apple, modalDispatch]);
+
+  const handleChange = (event) => {
+    setFormData((current) => ({ ...current, [event.target.name]: event.target.value }));
+    setValidation((current) => ({ ...current, [event.target.name]: "" }));
+    if (errors.register || errors.google) { reduxDispatch(clearError("register")); reduxDispatch(clearError("google")); }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    reduxDispatch(register(formData));
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const nextValidation = {};
+    if (formData.username.trim().length < 3) nextValidation.username = "Username must be at least 3 characters.";
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) nextValidation.email = "Enter a valid email address.";
+    if (passwordScore < 4) nextValidation.password = "Use at least 6 characters with upper, lower, and numeric characters.";
+    setValidation(nextValidation);
+    if (Object.keys(nextValidation).length === 0) reduxDispatch(register(formData));
   };
-
-  useEffect(() => {
-    let timer;
-    if (status.register === "succeeded" || status.google === "succeeded")
-      timer = setTimeout(() => {
-        modalDispatch({ type: "CLOSE_SIGNUP_MODAL" });
-      }, 500);
-
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [status.register, status.google, modalDispatch]);
 
   return (
-    <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 tr z-40 w-lg max-w-11/12 min-h-[650px] px-3 py-8 bg-white rounded-2xl shadow-2xl border-2 border-black">
-      <button
-        type="button"
-        className="absolute top-5 right-5 cursor-pointer hover:bg-gray-200"
-        onClick={() => modalDispatch({ type: "CLOSE_SIGNUP_MODAL" })}
-        role="button"
-        aria-label="Close sign up modal"
-      >
-        <X />
-      </button>
-      <h2 className="w-fit mx-auto text-3xl font-bold">Sign up</h2>
-      <div className="mt-8 space-y-2.5">
-        <button
-          className="w-full h-12 rounded-2xl flex justify-center items-center gap-5 bg-black text-white font-bold cursor-pointer"
-          type="button"
-          onClick={() => login()}
-        >
-          <Google className="size-7" />{" "}
-          {status.google === "loading"
-            ? "Connecting..."
-            : "Continue with google"}
-        </button>
-        <button
-          className="w-full h-12 rounded-2xl flex justify-center items-center gap-5 bg-black text-white font-bold cursor-pointer"
-          type="button"
-        >
-          <AppleDark className="size-7" /> Continue with apple
-        </button>
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onMouseDown={() => modalDispatch({ type: "CLOSE_SIGNUP_MODAL" })}>
+      <div role="dialog" aria-modal="true" aria-labelledby="signup-title" className="relative max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl sm:p-8" onMouseDown={(event) => event.stopPropagation()}>
+        <button type="button" className="absolute right-5 top-5 rounded-full p-2 text-black/60 transition hover:bg-black/5 hover:text-black" onClick={() => modalDispatch({ type: "CLOSE_SIGNUP_MODAL" })} aria-label="Close sign up dialog"><X size={20} /></button>
+        <div className="mb-7 pr-8"><p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-black/50">Join the community</p><h2 id="signup-title" className="text-3xl font-bold tracking-tight">Create your account</h2><p className="mt-2 text-sm text-black/60">Get a more personal shopping experience from your first visit.</p></div>
+        <div className="space-y-3"><button disabled={busy} className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-black/10 bg-white font-semibold transition hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-60" type="button" onClick={() => googleLogin()}><Google className="size-6" />{status.google === "loading" ? "Connecting..." : "Continue with Google"}</button><AppleLoginButton /></div>
+        <div className="my-6 flex items-center gap-3 text-xs text-black/40"><span className="h-px flex-1 bg-black/10" />OR SIGN UP WITH EMAIL<span className="h-px flex-1 bg-black/10" /></div>
+        {(errors.register || errors.google) && <div role="alert" className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{errors.register || errors.google}</div>}
+        <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+          <div><label htmlFor="signup-username" className="mb-1.5 block text-sm font-semibold">Username</label><div className="relative"><UserRound className="absolute left-3.5 top-3.5 text-black/40" size={18} /><input id="signup-username" name="username" type="text" autoComplete="username" value={formData.username} onChange={handleChange} placeholder="Your username" className={`${fieldClass} ${validation.username ? "border-red-500" : "border-black/15"}`} aria-invalid={!!validation.username} />{validation.username && <p className="mt-1 text-xs text-red-600">{validation.username}</p>}</div></div>
+          <div><label htmlFor="signup-email" className="mb-1.5 block text-sm font-semibold">Email address</label><div className="relative"><Mail className="absolute left-3.5 top-3.5 text-black/40" size={18} /><input id="signup-email" name="email" type="email" autoComplete="email" value={formData.email} onChange={handleChange} placeholder="you@example.com" className={`${fieldClass} ${validation.email ? "border-red-500" : "border-black/15"}`} aria-invalid={!!validation.email} />{validation.email && <p className="mt-1 text-xs text-red-600">{validation.email}</p>}</div></div>
+          <div><label htmlFor="signup-password" className="mb-1.5 block text-sm font-semibold">Password</label><div className="relative"><KeyRound className="absolute left-3.5 top-3.5 text-black/40" size={18} /><input id="signup-password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" value={formData.password} onChange={handleChange} placeholder="Create a strong password" className={`${fieldClass} ${validation.password ? "border-red-500" : "border-black/15"}`} aria-invalid={!!validation.password} /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} className="absolute right-3 top-3 text-black/50 hover:text-black" onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <EyeClosed size={19} /> : <Eye size={19} />}</button></div><div className="mt-2"><div className="mb-1 flex gap-1">{[1, 2, 3, 4].map((step) => <span key={step} className={`h-1 flex-1 rounded-full ${passwordScore >= step ? passwordScore === 4 ? "bg-emerald-500" : "bg-amber-400" : "bg-black/10"}`} />)}</div><p className="text-xs text-black/50">{passwordScore === 4 ? "Strong password" : "Use 6+ characters, upper/lower case, and a number."}</p>{validation.password && <p className="mt-1 text-xs text-red-600">{validation.password}</p>}</div></div>
+          <button type="submit" disabled={busy} className="h-12 w-full rounded-xl bg-black font-bold text-white transition hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-60">{status.register === "loading" ? "Creating account..." : status.register === "succeeded" ? "Account created" : "Create account"}</button>
+        </form>
+        <p className="mt-6 text-center text-sm text-black/60">Already have an account? <button type="button" className="font-semibold text-black underline underline-offset-4" onClick={() => { modalDispatch({ type: "CLOSE_SIGNUP_MODAL" }); modalDispatch({ type: "OPEN_SIGNIN_MODAL" }); }}>Sign in</button></p>
       </div>
-      <div className="w-full h-[1px] bg-black my-7 relative after:content-['or'] after:absolute after:w-fit after:bg-white after:p-1 after:h-fit after:-top-4.5 after:left-1/2" />
-      {(errors.register || errors.google) && (
-        <p className="text-sm text-red-600 truncate">
-          * {errors.register + errors.google}
-        </p>
-      )}
-      <form className="space-y-3" onSubmit={handleSubmit}>
-        <label htmlFor="username" className="block ml-1 mb-1.5">
-          Username
-        </label>
-        <div className="relative w-full h-fit">
-          <User className="absolute top-1/2 left-3 -translate-y-1/2 size-5 text-black/50" />
-          <input
-            type="text"
-            name="username"
-            id="username"
-            placeholder="Your username"
-            className="w-full h-10 border border-black/50 rounded-2xl pl-10 focus:outline-none"
-            value={formData.username}
-            onChange={handleChange}
-          />
-        </div>
-        <label htmlFor="email2" className="block ml-1 mb-1.5">
-          Email
-        </label>
-        <div className="relative w-full h-fit">
-          <Mail className="absolute top-1/2 left-3 -translate-y-1/2 size-5 text-black/50" />
-          <input
-            type="email"
-            name="email"
-            id="email2"
-            placeholder="Name@example.com"
-            className="w-full h-10 border border-black/50 rounded-2xl pl-10 focus:outline-none"
-            value={formData.email}
-            onChange={handleChange}
-          />
-        </div>
-        <label htmlFor="password" className="block ml-1 mb-1.5">
-          Password
-        </label>
-        <div className="relative w-full h-fit">
-          <Key className="absolute top-1/2 left-3 -translate-y-1/2 size-5 text-black/50" />
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            id="password"
-            placeholder="******"
-            className="w-full h-10 border border-black/50 rounded-2xl pl-10 focus:outline-none"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <button
-            className="absolute top-1/2 right-3 -translate-y-1/2 size-fit cursor-pointer"
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
-          </button>
-        </div>
-        <button
-          type="submit"
-          className="w-full h-12 rounded-2xl bg-black text-white font-bold cursor-pointer"
-          role="button"
-          aria-label="Open sign in modal"
-          disabled={status.register === "loading"}
-        >
-          {status.register === "loading"
-            ? "Logging..."
-            : status.register === "succeeded"
-            ? "Register successful"
-            : "Sign up"}
-        </button>
-      </form>
-      <p className="text-center mt-5">
-        Do have an account?{" "}
-        <Link
-          to={""}
-          className="text-blue-500"
-          onClick={() => {
-            modalDispatch({ type: "CLOSE_SIGNUP_MODAL" });
-            modalDispatch({ type: "OPEN_SIGNIN_MODAL" });
-          }}
-        >
-          Sign in
-        </Link>
-      </p>
     </div>
   );
 };
