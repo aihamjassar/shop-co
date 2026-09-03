@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   getAllProducts,
+  getProduct,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -8,6 +9,7 @@ import {
 
 const initialState = {
   products: [],
+  currentProduct: null,
   status: "idle",
   error: null,
 };
@@ -17,7 +19,7 @@ const productsSlice = createSlice({
   initialState,
   reducers: {
     clearError: (state) => (state.error = null),
-    setProducts: (state, products) => (state.products = products),
+    setProducts: (state, action) => (state.products = action.payload),
   },
   extraReducers: (builder) => {
     const handlePending = (state) => {
@@ -36,7 +38,14 @@ const productsSlice = createSlice({
         state.error = null;
         state.products = action.payload.products;
       })
-      .addCase(getAllProducts.rejected, handleRejected);
+      .addCase(getAllProducts.rejected, handleRejected)
+      .addCase(getProduct.pending, handlePending)
+      .addCase(getProduct.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.error = null;
+        state.currentProduct = action.payload.product;
+      })
+      .addCase(getProduct.rejected, handleRejected);
     builder
       .addCase(createProduct.pending, handlePending)
       .addCase(createProduct.fulfilled, (state, action) => {
@@ -52,7 +61,7 @@ const productsSlice = createSlice({
         state.error = null;
         const updatedProduct = action.payload.updatedProduct;
         state.products = state.products.map((product) =>
-          product._id === updatedProduct._d ? updatedProduct : product
+          product._id === updatedProduct._id ? updatedProduct : product
         );
       })
       .addCase(updateProduct.rejected, handleRejected);

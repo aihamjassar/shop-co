@@ -1,6 +1,5 @@
 import heroImg from "../../assets/heroImg.png";
 import star from "../../assets/Vector.svg";
-import { motion } from "framer-motion";
 
 export const HeroSection = () => {
   return (
@@ -8,10 +7,7 @@ export const HeroSection = () => {
       <div className="container mx-auto px-5 md:px-8 pt-6 xl:pt-16">
         <div className="flex flex-col lg:flex-row justify-between gap-2 md:gap-10">
           {/* Right Side */}
-          <motion.div
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
+          <div
             className="w-full lg:w-1/2"
           >
             <div className="space-y-5">
@@ -61,12 +57,9 @@ export const HeroSection = () => {
                 <p className="text-[12px] text-black/60">Happy Customers</p>
               </div>
             </div>
-          </motion.div>
+          </div>
           {/* Left Side */}
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
+          <div
             className="w-full lg:w-1/2 relative flex justify-center"
           >
             <img
@@ -89,7 +82,7 @@ export const HeroSection = () => {
               aria-hidden={true}
               alt=""
             />
-          </motion.div>
+          </div>
         </div>
       </div>
       <div className=" w-full min-h-20 lg:min-h-[97px] bg-black text-white flex items-center ">

@@ -1,14 +1,13 @@
 import { AppleDark } from "@ridemountainpig/svgl-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 export const AppleLoginButton = () => {
-  const reduxDispatch = useDispatch();
-  const { status, errors } = useSelector((state) => state.auth);
+  const { status } = useSelector((state) => state.auth);
 
   const handleAppleLogin = async () => {
     try {
-      const clientId = import.meta.VITE_APPLE_CLIENT_ID;
-      const redirectUri = import.meta.VITE_APPLE_REDIRECT_URI;
+      const clientId = import.meta.env.VITE_APPLE_CLIENT_ID;
+      const redirectUri = import.meta.env.VITE_APPLE_REDIRECT_URI;
 
       const url = `https://appleid.apple.com/auth/authorize?response_type=code&response_mode=form_post&client_id=${clientId}&redirect_uri=${redirectUri}&scope=name email`;
       const width = 500;

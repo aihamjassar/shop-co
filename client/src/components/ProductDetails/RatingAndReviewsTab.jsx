@@ -2,7 +2,6 @@ import { CheckCircle2, Ellipsis, Settings2 } from "lucide-react";
 import Select from "react-select";
 import { Stars } from "../common/Stars";
 import { useState } from "react";
-import { motion } from "framer-motion";
 
 export const RatingAndReviewsTab = () => {
   const customStyles = {
@@ -131,10 +130,7 @@ export const RatingAndReviewsTab = () => {
           </button>
         </div>
       </div>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+      <div
         className="grid grid-cols-1 sm:grid-cols-2 gap-3"
       >
         {testimonials.map(({ rating, name, text, active }, idx) => (
@@ -160,7 +156,7 @@ export const RatingAndReviewsTab = () => {
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
       <button className="w-64 border border-black/50 p-1.5 rounded-4xl block mx-auto hover:bg-black hover:text-white cursor-pointer">
         Load More Reviews
       </button>

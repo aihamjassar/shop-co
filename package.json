@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "nodemon server/server.js",
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "seed": "node server/seed/seed.js import",
+    "seed:destroy": "node server/seed/seed.js destroy"
   },
   "keywords": [],
   "author": "",

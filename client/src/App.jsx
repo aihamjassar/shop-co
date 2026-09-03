@@ -114,7 +114,7 @@ function App() {
               isAuthenticate && user.role === "admin" ? (
                 <DashboardLayout />
               ) : (
-                <Navigate to={"*"} />
+                <Navigate to="/" replace />
               )
             }
           >

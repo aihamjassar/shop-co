@@ -1,5 +1,16 @@
 # E-Commerce App
 
+## Local demo data
+
+The repository includes a repeatable MongoDB product seed with eight realistic catalog items, variant options, ratings, discounts, and remote image URLs. Configure `MONGODB_URI` in `.env`, then run:
+
+```bash
+npm run seed          # clears and imports the demo catalog
+npm run seed:destroy  # removes product data
+```
+
+The storefront catalog and product detail pages now read from the API. Set `VITE_API_URL` in the client environment when the API is not running at `http://localhost:5000/api/v1`.
+
 > A full-stack e-commerce application with a React storefront and dashboard, Express API, MongoDB, Stripe checkout, Cloudinary image management, product reviews, user profiles, and order-management screens.
 
 ## Overview
