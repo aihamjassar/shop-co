@@ -1,0 +1,25 @@
+info:
+  name: LOGIN
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/auth/login"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"email\": \"aihamxdev2@gmail.com\",\r
+
+      \    \"password\": \"Aaiham4004186?\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

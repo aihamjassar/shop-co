@@ -1,0 +1,29 @@
+info:
+  name: CREATE REVIEW
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{base_url}}/reviews"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"user\": \"68a073a8f85a89326a9eb352\",\r
+
+      \    \"product\": \"68a31691dba0301e02214a44\",\r
+
+      \    \"title\": \"A good product\",\r
+
+      \    \"rating\": 2\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

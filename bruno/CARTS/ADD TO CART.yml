@@ -1,0 +1,31 @@
+info:
+  name: ADD TO CART
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/carts"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"productId\": \"68a3524e68314fbda5d4c793\",\r
+
+      \    \"quantity\": 3,\r
+
+      \    \"price\": 70,\r
+
+      \    \"color\": \"white\",\r
+
+      \    \"size\": \"Small\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

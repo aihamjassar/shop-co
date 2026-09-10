@@ -1,0 +1,25 @@
+info:
+  name: UPDATE ME
+  type: http
+  seq: 2
+
+http:
+  method: PATCH
+  url: "{{base_url}}/users/me"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"username\": \"Aiham 2025\",\r
+
+      \    \"email\": \"aihamxdev@gmail.com\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

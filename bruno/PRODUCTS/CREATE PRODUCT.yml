@@ -1,0 +1,49 @@
+info:
+  name: CREATE PRODUCT
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/products"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"title\": \"T-shirt\",\r
+
+      \    \"description\": \"A good Pants .................................................................................................\",\r
+
+      \    \"quantity\": 50,\r
+
+      \    \"price\": 120,\r
+
+      \    \"discount\": 10,\r
+
+      \    \"colors\": [\"red\", \"black\", \"blue\"],\r
+
+      \    \"sizes\": [\"Large\", \"Small\"],\r
+
+      \    \"images\": [\"https://example.com/image-1.png\", \"https://example.com/image-1.png\"],\r
+
+      \    \"imageCover\": \"https://example.com/image-1.png\",\r
+
+      \    \"ratingsQuantity\": 20,\r
+
+      \    \"raingsAverage\": 3.5,\r
+
+      \    \"style\": \"Party\",\r
+
+      \    \"category\": \"Wemon\",\r
+
+      \    \"Subcategory\": \"T-shirts\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

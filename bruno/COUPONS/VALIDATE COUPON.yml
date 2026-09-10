@@ -1,0 +1,23 @@
+info:
+  name: VALIDATE COUPON
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/coupons"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"code\": \"GIFTNVSJ8E\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

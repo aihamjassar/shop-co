@@ -1,0 +1,19 @@
+info:
+  name: GET ALL REVIEWS
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/reviews"
+  body:
+    type: text
+    data: ""
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

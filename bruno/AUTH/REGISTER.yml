@@ -1,0 +1,27 @@
+info:
+  name: REGISTER
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/auth/register"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"username\": \"Aiham dev2\",\r
+
+      \    \"email\": \"aihamxdev2@gmail.com\",\r
+
+      \    \"password\": \"Aaiham4004186?\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

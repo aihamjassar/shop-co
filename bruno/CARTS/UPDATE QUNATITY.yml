@@ -1,0 +1,25 @@
+info:
+  name: UPDATE QUNATITY
+  type: http
+  seq: 3
+
+http:
+  method: PATCH
+  url: "{{base_url}}/carts"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"itemId\": \"68a379c06a9dba359c8087b0\", \r
+
+      \    \"quantity\": 0\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

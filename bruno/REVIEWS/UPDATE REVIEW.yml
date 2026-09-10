@@ -1,0 +1,25 @@
+info:
+  name: UPDATE REVIEW
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{base_url}}/reviews/68a5c783b13b39cd79decc36"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"title\": \"bad product\",\r
+
+      \    \"rating\": \"0.5\"\r
+
+      }"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
