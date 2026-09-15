@@ -6,6 +6,10 @@ const globalErrorHandler = require("./middlewares/globalErrorHandler.middleware"
 const morgan = require("morgan");
 const { v2: cloudinary } = require("cloudinary");
 
+
+require("dotenv").config();
+const { connectDB } = require("./config/db");
+
 const authRoute = require("./routes/auth.route");
 const userRoute = require("./routes/user.route");
 const productRoute = require("./routes/product.route");
@@ -63,5 +67,5 @@ app.all("/{*splat}", (req, res, next) => {
 });
 
 app.use(globalErrorHandler);
-
+connectDB();
 module.exports = app;
