@@ -64,3 +64,4 @@ process.on("SIGTERM", () => shutdown("SIGTERM"));
 process.on("SIGINT", () => shutdown("SIGINT"));
 
 startServer();
+module.exports = app
