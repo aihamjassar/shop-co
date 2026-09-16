@@ -8,7 +8,6 @@ const { v2: cloudinary } = require("cloudinary");
 
 
 require("dotenv").config();
-const { connectDB } = require("./config/db");
 
 const authRoute = require("./routes/auth.route");
 const userRoute = require("./routes/user.route");
@@ -67,5 +66,5 @@ app.all("/{*splat}", (req, res, next) => {
 });
 
 app.use(globalErrorHandler);
-connectDB();
+
 module.exports = app;

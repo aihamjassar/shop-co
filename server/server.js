@@ -21,7 +21,7 @@ const startServer = async () => {
 
     server = app.listen(PORT, () => {
       console.log(
-        `✅ Server running on http://localhost:${PORT} [${process.env.NODE_ENV}]`
+        `✅ Server running on http://localhost:${PORT} [${process.env.NODE_ENV}]`,
       );
     });
   } catch (err) {
@@ -64,4 +64,3 @@ process.on("SIGTERM", () => shutdown("SIGTERM"));
 process.on("SIGINT", () => shutdown("SIGINT"));
 
 startServer();
-module.exports = app
