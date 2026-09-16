@@ -1,11 +1,27 @@
 import { cart } from "../data/products";
 import { CartItem } from "../components/CartItem";
 import { ArrowRight } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
 
 export const CartPage = () => {
+  const params = useParams()
   return (
     <div className="container mx-auto px-5 md:px-8 py-5">
-      <div className="text-black/60">Home &gt; Cart</div>
+      <div className="text-black/60">
+        <Link
+          to={"/"}
+          className="transition-colors duration-300 hover:text-blue-700"
+        >
+          Home
+        </Link>{" "}
+        &gt;{" "}
+        <Link
+          to={"/cart/" + params.id}
+          className="transition-colors duration-300 hover:text-blue-700"
+        >
+          Cart
+        </Link>
+      </div>
       <h2 className="text-4xl font-extrabold uppercase -tracking-wider my-8">
         your cart
       </h2>

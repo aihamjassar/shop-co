@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Filter } from "../components/Filter";
 import { ProductsList } from "../components/ProductsList";
+import { Link } from "react-router-dom";
 
 export const ProductsPage = () => {
   const [filterIsOpen, setFilterIsOpen] = useState(false);
-  
+
   return (
     <main className="container mx-auto px-5 py-5 md:px-8">
       {filterIsOpen && (
@@ -13,7 +14,21 @@ export const ProductsPage = () => {
           onClick={() => setFilterIsOpen(false)}
         />
       )}
-      <div className="text-black/60">Home &gt; Shop &gt; Man &gt; Casual</div>
+      <div className="text-black/60">
+        <Link
+          to={"/"}
+          className="transition-colors duration-300 hover:text-blue-700"
+        >
+          Home
+        </Link>{" "}
+        &gt;{" "}
+        <Link
+          to={"/products"}
+          className="transition-colors duration-300 hover:text-blue-700"
+        >
+          Products
+        </Link>
+      </div>
       <div className="flex gap-8 pt-10">
         <div
           className={`${

@@ -3,16 +3,32 @@ import { axiosInstance } from "../../lib/axios";
 
 export const getAllProducts = createAsyncThunk(
   "products/all",
-  async (_, { rejectWithValue }) => {
+  async (params = {}, { rejectWithValue }) => {
     try {
-      const res = await axiosInstance.get("/products");
-      return { products: res.data.data };
+      const query = new URLSearchParams();
+
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          query.set(key, String(value));
+        }
+      });
+
+      const queryString = query.toString();
+
+      const res = await axiosInstance.get(
+        `/products${queryString ? `?${queryString}` : ""}`,
+      );
+
+      return {
+        products: res.data.data,
+        totalProducts: res.data.totalProducts,
+      };
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch products"
+        error.response?.data?.message || "Failed to fetch products",
       );
     }
-  }
+  },
 );
 
 export const getProduct = createAsyncThunk(
@@ -23,10 +39,10 @@ export const getProduct = createAsyncThunk(
       return { product: res.data.data };
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch product"
+        error.response?.data?.message || "Failed to fetch product",
       );
     }
-  }
+  },
 );
 
 export const createProduct = createAsyncThunk(
@@ -37,10 +53,10 @@ export const createProduct = createAsyncThunk(
       return { product: res.data.data };
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Failed to create product"
+        error.response?.data?.message || "Failed to create product",
       );
     }
-  }
+  },
 );
 
 export const updateProduct = createAsyncThunk(
@@ -52,10 +68,10 @@ export const updateProduct = createAsyncThunk(
       return { updatedProduct };
     } catch (error) {
       return rejectWithValue(
-        error.response?.data?.message || "Failed to update product"
+        error.response?.data?.message || "Failed to update product",
       );
     }
-  }
+  },
 );
 
 export const deleteProduct = createAsyncThunk(
@@ -70,8 +86,8 @@ export const deleteProduct = createAsyncThunk(
     } catch (error) {
       console.log("rejected");
       return rejectWithValue(
-        error.response?.data?.message || "Failed to delete product"
+        error.response?.data?.message || "Failed to delete product",
       );
     }
-  }
+  },
 );

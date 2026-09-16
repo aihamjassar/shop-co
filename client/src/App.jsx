@@ -99,9 +99,9 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="profile" element={<ProfilePage />} />
-            <Route path="products" element={<ProductsPage />} />
+            <Route path="shop" element={<ProductsPage />} />
             <Route path="details/:id" element={<ProductDetailsPage />} />
-            <Route path="cart/:id" element={<CartPage />} />
+            <Route path="cart" element={<CartPage />} />
             <Route
               path="reset-password/:token"
               element={<ResetPasswordPage />}

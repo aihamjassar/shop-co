@@ -44,7 +44,7 @@ async function getAppleTokens(code) {
     params,
     {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    }
+    },
   );
 
   return response.data;
@@ -74,7 +74,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email }).select("+password");
 
   if (!user || !(await user.comparePassword(password)))
-    return next(new ApiError("Incorrect E-mail or password", 401));
+    return next(new ApiError("Incorrect E-mail or password", 400));
 
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
@@ -97,7 +97,7 @@ exports.loginWithGoogle = asyncHandler(async (req, res, next) => {
       "https://www.googleapis.com/oauth2/v2/userinfo",
       {
         headers: { Authorization: `Bearer ${access_token}` },
-      }
+      },
     );
 
     data = response.data;

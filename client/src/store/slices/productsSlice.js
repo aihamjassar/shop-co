@@ -9,7 +9,7 @@ import {
 
 const initialState = {
   products: [],
-  currentProduct: null,
+  totalProducts: 0,
   status: "idle",
   error: null,
 };
@@ -35,8 +35,9 @@ const productsSlice = createSlice({
       .addCase(getAllProducts.pending, handlePending)
       .addCase(getAllProducts.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.error = null;
         state.products = action.payload.products;
+        state.totalProducts = action.payload.totalProducts;
+        state.error = null;
       })
       .addCase(getAllProducts.rejected, handleRejected)
       .addCase(getProduct.pending, handlePending)
@@ -61,7 +62,7 @@ const productsSlice = createSlice({
         state.error = null;
         const updatedProduct = action.payload.updatedProduct;
         state.products = state.products.map((product) =>
-          product._id === updatedProduct._id ? updatedProduct : product
+          product._id === updatedProduct._id ? updatedProduct : product,
         );
       })
       .addCase(updateProduct.rejected, handleRejected);

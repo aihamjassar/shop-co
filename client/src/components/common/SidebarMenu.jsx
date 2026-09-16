@@ -24,7 +24,7 @@ export const SidebarMenu = ({ dispatch, sideMenuClass }) => {
       </div>
 
       <nav className="flex flex-col lg:flex-row gap-3 text-white lg:text-black">
-        <select
+        {/* <select
           name="shop"
           id="shop"
           className="bg-black lg:bg-white w-fit cursor-pointer"
@@ -34,22 +34,30 @@ export const SidebarMenu = ({ dispatch, sideMenuClass }) => {
           <option value="women">Women</option>
           <option value="kids">Kids</option>
           <option value="shoes">Shoes</option>
-        </select>
+        </select> */}
 
-        <ul className="flex flex-col lg:flex-row gap-3 text-white lg:text-black">
+        <ul className="flex flex-col lg:flex-row gap-9 text-white lg:text-black">
           <li>
-            <NavItem to={"/products/on_sale"} closeSidebar={closeSidebar}>
-              On Sale
+            <NavItem
+              to={"/"}
+              closeSidebar={closeSidebar}
+              className="hover:text-blue-700"
+            >
+              Home
             </NavItem>
           </li>
           <li>
-            <NavItem to={"/products/new_arrivals"} closeSidebar={closeSidebar}>
-              New Arrivals
+            <NavItem
+              to={"/shop"}
+              closeSidebar={closeSidebar}
+              className="hover:text-blue-700"
+            >
+              Shop
             </NavItem>
           </li>
           <li>
-            <NavItem to={"/products/brands"} closeSidebar={closeSidebar}>
-              Brands
+            <NavItem to={"/cart"} closeSidebar={closeSidebar}>
+              Cart
             </NavItem>
           </li>
         </ul>

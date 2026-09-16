@@ -21,7 +21,7 @@ export const HeroSection = () => {
               </p>
             </div>
             <a
-              href={"#browsesByStyle"}
+              href={"/shop"}
               className="block w-full lg:w-52 p-3.5 rounded-[62px] text-white bg-black text-center my-8 cursor-pointer hover:bg-gray-800 transition-colors"
               role="button"
               aria-label="Shop Now"

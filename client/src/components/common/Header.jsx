@@ -58,7 +58,7 @@ export const Header = forwardRef((props, ref) => {
 
           <HeaderActions dispatch={dispatch} />
 
-          {state.isSearchbarOpen && <MobileSearchbar dispatch={dispatch} />}
+          {/* {state.isSearchbarOpen && <MobileSearchbar dispatch={dispatch} />} */}
         </div>
       </header>
     </>

@@ -43,10 +43,10 @@ const productSchema = new mongoose.Schema(
       max: [100, "Discount must be less than or equal to 100"],
     },
     colors: {
-      type: [String],
+      type: [String], // #00C12B, #F50606, #F5DD06, #F57906, #06CAF5, #063AF5, #7D06F5, #F506A4, #FFFFFF, #000000
     },
     sizes: {
-      type: [String],
+      type: [String], // Small, X-Small, XX-Small, Medium, Large, X-Large, XX-Large, 3X-Large, 4X-Large
     },
     imageCover: {
       type: String,
@@ -69,14 +69,14 @@ const productSchema = new mongoose.Schema(
       enum: ["Casual", "Formal", "Gym", "Party"],
     },
     category: {
-      type: String, // Men, Women, Kids
+      type: String, // T-shirts, Shirts, Jeans, Jackets, Shoes, Dresses, Shorts, Hoodie
       required: [true, "Product must be belong to a category"],
     },
-    subcategory: {
-      type: String, // T-shirt, pants, Jackets, shoes, ...
-    },
+    // subcategory: {
+    //   type: String, // T-shirt, jeans, jacket, shoe, ...
+    // },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 productSchema.pre("save", function (next) {

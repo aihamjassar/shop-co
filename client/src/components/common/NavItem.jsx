@@ -7,7 +7,7 @@ export const NavItem = ({ to, closeSidebar, children }) => {
       className={({ isActive }) =>
         isActive
           ? "text-blue-700 font-bold"
-          : "text-white md:text-black transition-colors duration-300 hover:text-blue-700"
+          : "text-white lg:text-black transition-colors duration-300 hover:text-blue-700"
       }
       onClick={closeSidebar}
     >

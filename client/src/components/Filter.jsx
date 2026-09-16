@@ -1,191 +1,416 @@
-import { ChevronDown, ChevronRight, X } from "lucide-react";
+import { Check, ChevronDown, ChevronRight, X } from "lucide-react";
 import { useState } from "react";
 import { Range, getTrackBackground } from "react-range";
+import { useSearchParams } from "react-router-dom";
+import { categories, colors, dressStyles, sizes } from "../constants/constants";
 
-const colors = [
-  "#00C12B",
-  "#F50606",
-  "#F5DD06",
-  "#F57906",
-  "#06CAF5",
-  "#063AF5",
-  "#7D06F5",
-  "#F506A4",
-  "#FFFFFF",
-  "#000000",
-];
-const sizes = [
-  "Small",
-  "XX-Small",
-  "X-Small",
-  "Medium",
-  "Large",
-  "X-Large",
-  "XX-Large",
-  "3X-Large",
-  "4XLarge",
-];
-const dressStyles = ["Casual", "Formal", "Party", "Gym"];
 const MIN = 0;
 const MAX = 500;
 const STEP = 1;
+
+const FilterSection = ({ title, open, onToggle, children }) => {
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full cursor-pointer items-center justify-between"
+        aria-expanded={open}
+      >
+        <span className="text-[20px] font-semibold">{title}</span>
+
+        {open ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+      </button>
+
+      {open && <div className="py-5">{children}</div>}
+    </div>
+  );
+};
+
+const RoundCheckbox = ({ label, checked, onChange }) => {
+  return (
+    <label className="group flex cursor-pointer items-center justify-between">
+      <span
+        className={`text-[14px] transition-colors ${
+          checked
+            ? "font-medium text-black"
+            : "text-black/60 group-hover:text-black"
+        }`}
+      >
+        {label}
+      </span>
+
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        className="sr-only"
+      />
+
+      <span
+        className={`flex size-5 items-center justify-center rounded-full border transition-colors ${
+          checked
+            ? "border-black bg-black"
+            : "border-black/20 group-hover:border-black/50"
+        }`}
+      >
+        {checked && <Check size={12} className="text-white" strokeWidth={3} />}
+      </span>
+    </label>
+  );
+};
+
 export const Filter = ({ setFilterIsOpen }) => {
-  const [openColors, setOpenColors] = useState(true);
-  const [openSize, setOpenSize] = useState(true);
-  const [openDressStyle, setOpenDressStyle] = useState(true);
-  const [openPrice, setOpenPrice] = useState(true);
-  const [values, setValues] = useState([50, 200]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  /*
+   * Initialize the filter from the URL.
+   * This means refreshing the page keeps the selected filters.
+   */
+  const getArrayParam = (key) => {
+    const value = searchParams.get(key);
+
+    return value ? value.split(",") : [];
+  };
+
+  const [openSections, setOpenSections] = useState({
+    categories: true,
+    colors: true,
+    sizes: true,
+    dressStyles: true,
+    priceRange: true,
+  });
+
+  const [selectedCategories, setSelectedCategories] = useState(() =>
+    getArrayParam("categories"),
+  );
+
+  const [selectedColors, setSelectedColors] = useState(() =>
+    getArrayParam("colors"),
+  );
+
+  const [selectedSizes, setSelectedSizes] = useState(() =>
+    getArrayParam("sizes"),
+  );
+
+  const [selectedDressStyles, setSelectedDressStyles] = useState(() =>
+    getArrayParam("dressStyles"),
+  );
+
+  const [priceRange, setPriceRange] = useState(() => [
+    Number(searchParams.get("minPrice")) || MIN,
+    Number(searchParams.get("maxPrice")) || MAX,
+  ]);
+
+  const toggleSection = (section) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  const toggleItem = (value, setItems) => {
+    setItems((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value],
+    );
+  };
+
+  /*
+   * Apply all filters to the URL.
+   */
+  const applyFilters = () => {
+    const params = new URLSearchParams(searchParams);
+
+    /*
+     * Category
+     */
+    if (selectedCategories.length > 0) {
+      params.set("categories", selectedCategories.join(","));
+    } else {
+      params.delete("categories");
+    }
+
+    /*
+     * Colors
+     */
+    if (selectedColors.length > 0) {
+      params.set("colors", selectedColors.join(","));
+    } else {
+      params.delete("colors");
+    }
+
+    /*
+     * Sizes
+     */
+    if (selectedSizes.length > 0) {
+      params.set("sizes", selectedSizes.join(","));
+    } else {
+      params.delete("sizes");
+    }
+
+    /*
+     * Dress styles
+     */
+    if (selectedDressStyles.length > 0) {
+      params.set("dressStyles", selectedDressStyles.join(","));
+    } else {
+      params.delete("dressStyles");
+    }
+
+    /*
+     * Price
+     */
+    if (priceRange[0] > MIN) {
+      params.set("minPrice", String(priceRange[0]));
+    } else {
+      params.delete("minPrice");
+    }
+
+    if (priceRange[1] < MAX) {
+      params.set("maxPrice", String(priceRange[1]));
+    } else {
+      params.delete("maxPrice");
+    }
+
+    /*
+     * Always start from page 1 after applying filters.
+     */
+    params.set("page", "1");
+
+    setSearchParams(params);
+
+    /*
+     * Close mobile filter after applying.
+     */
+    setFilterIsOpen(false);
+  };
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setSelectedColors([]);
+    setSelectedSizes([]);
+    setSelectedDressStyles([]);
+    setPriceRange([MIN, MAX]);
+
+    const params = new URLSearchParams();
+
+    /*
+     * Keep search and sorting when clearing filters.
+     */
+    const search = searchParams.get("search");
+    const sortBy = searchParams.get("sortBy");
+
+    if (search) {
+      params.set("search", search);
+    }
+
+    if (sortBy) {
+      params.set("sortBy", sortBy);
+    }
+
+    params.set("page", "1");
+
+    setSearchParams(params);
+  };
 
   return (
-    <div className="p-3 border border-black/10 rounded-md space-y-5 h-fit">
-      <div className="flex justify-between items-center">
+    <div className="h-fit space-y-5 rounded-md border border-black/10 p-3">
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <h3 className="text-3xl font-bold">Filter</h3>
+
         <button
-          className="hover:bg-black/5 cursor-pointer p-1 rounded lg:hidden"
+          type="button"
+          className="cursor-pointer rounded p-1 hover:bg-black/5 lg:hidden"
           onClick={() => setFilterIsOpen(false)}
+          aria-label="Close filter"
         >
           <X />
         </button>
       </div>
-      <div className="w-full h-[1px] bg-black/15" />
-      <div className="space-y-3 py-2">
-        <button className="w-full flex justify-between items-center cursor-pointer">
-          <span className="text-[14px] text-black/60">T-shirts</span>
-          {<ChevronRight size={20} className="text-black/60" />}
-        </button>
-        <button className="w-full flex justify-between items-center cursor-pointer">
-          <span className="text-[14px] text-black/60">Shorts</span>
-          {<ChevronRight size={20} className="text-black/60" />}
-        </button>
-        <button className="w-full flex justify-between items-center cursor-pointer">
-          <span className="text-[14px] text-black/60">Shirts</span>
-          {<ChevronRight size={20} className="text-black/60" />}
-        </button>
-        <button className="w-full flex justify-between items-center cursor-pointer">
-          <span className="text-[14px] text-black/60">Hoodie</span>
-          {<ChevronRight size={20} className="text-black/60" />}
-        </button>
-        <button className="w-full flex justify-between items-center cursor-pointer">
-          <span className="text-[14px] text-black/60">Jeans</span>
-          {<ChevronRight size={20} className="text-black/60" />}
-        </button>
-      </div>
-      <div className="w-full h-[1px] bg-black/15" />
-      <div>
-        <button
-          className="w-full flex justify-between items-center cursor-pointer"
-          onClick={() => setOpenPrice(!openPrice)}
-        >
-          <span className="font-semibold text-[20px]">Price</span>
-          {!openPrice ? <ChevronRight /> : <ChevronDown />}
-        </button>
-        {openPrice && (
-          <div className="px-2.5 pb-10 pt-5">
-            <Range
-              values={values}
-              min={MIN}
-              step={STEP}
-              max={MAX}
-              onChange={(newValues) => setValues(newValues)}
-              renderTrack={({ props, children }) => (
-                <div
-                  {...props}
-                  className="w-full h-1 rounded bg-gray-300"
-                  style={{
-                    ...props.style,
-                    background: getTrackBackground({
-                      values,
-                      colors: ["#ccc", "#000", "#ccc"],
-                      min: MIN,
-                      max: MAX,
-                    }),
-                  }}
-                >
-                  {children}
-                </div>
-              )}
-              renderThumb={({ props, index }) => (
-                <div {...props} className="size-4 bg-black rounded-full shadow">
-                  <div className="absolute -bottom-6 text-xs text-black font-semibold">
-                    ${values[index]}
-                  </div>
-                </div>
-              )}
+
+      <div className="h-px w-full bg-black/15" />
+
+      {/* Category */}
+      <FilterSection
+        title="Categories"
+        open={openSections.categories}
+        onToggle={() => toggleSection("categories")}
+      >
+        <div className="space-y-3">
+          {categories.map((category) => (
+            <RoundCheckbox
+              key={category}
+              label={category}
+              checked={selectedCategories.includes(category)}
+              onChange={() => toggleItem(category, setSelectedCategories)}
             />
-          </div>
-        )}
-      </div>
-      <div className="w-full h-[1px] bg-black/15" />
-      <div>
-        <button
-          className="w-full flex justify-between items-center cursor-pointer"
-          onClick={() => setOpenColors(!openColors)}
-        >
-          <span className="font-semibold text-[20px]">Colors</span>
-          {openColors ? <ChevronDown /> : <ChevronRight />}
-        </button>
-        <div
-          className={`flex flex-wrap justify-between gap-2.5 py-5 ${
-            !openColors && "hidden"
-          }`}
-        >
-          {colors.map((color) => (
-            <button
-              className="size-10 rounded-full border border-black/10 cursor-pointer"
-              style={{ backgroundColor: color }}
-              key={color}
-            ></button>
           ))}
         </div>
-      </div>
-      <div className="w-full h-[1px] bg-black/15" />
-      <div>
-        <button
-          className="w-full flex justify-between items-center cursor-pointer"
-          onClick={() => setOpenSize(!openSize)}
-        >
-          <span className="font-semibold text-[20px]">Size</span>
-          {openSize ? <ChevronDown /> : <ChevronRight />}
-        </button>
-        <div
-          className={`flex flex-wrap gap-2.5 py-5 ${
-            !openSize && "hidden"
-          }`}
-        >
-          {sizes.map((size) => (
-            <button
-              className={`w-fit px-2 py-1 rounded-2xl bg-black/5 border border-black/10 cursor-pointer hover:bg-black hover:text-white transition-colors duration-300`}
-              key={size}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="w-full h-[1px] bg-black/15" />
-      <div>
-        <button
-          className="w-full flex justify-between items-center cursor-pointer"
-          onClick={() => setOpenDressStyle(!openDressStyle)}
-        >
-          <span className="text-[20px] font-semibold">Dress Style</span>
-          {openDressStyle ? <ChevronDown /> : <ChevronRight />}
-        </button>
-        <div className={`space-y-3 py-5 ${!openDressStyle && "hidden"}`}>
-          {dressStyles.map((style) => (
-            <button
-              className="w-full flex justify-between items-center cursor-pointer"
+      </FilterSection>
+
+      <div className="h-px w-full bg-black/15" />
+
+      {/* Dress Style */}
+      <FilterSection
+        title="Dress Styles"
+        open={openSections.dressStyles}
+        onToggle={() => toggleSection("dressStyles")}
+      >
+        <div className="space-y-3">
+          {dressStyles.map(({ name: style }) => (
+            <RoundCheckbox
               key={style}
-            >
-              <span className="text-[14px] text-black/60">{style}</span>
-              {<ChevronRight size={20} className="text-black/60" />}
-            </button>
+              label={style}
+              checked={selectedDressStyles.includes(style)}
+              onChange={() => toggleItem(style, setSelectedDressStyles)}
+            />
           ))}
         </div>
+      </FilterSection>
+
+      <div className="h-px w-full bg-black/15" />
+
+      {/* Colors */}
+      <FilterSection
+        title="Colors"
+        open={openSections.colors}
+        onToggle={() => toggleSection("colors")}
+      >
+        <div className="flex flex-wrap justify-between gap-2.5">
+          {colors.map((color) => {
+            const selected = selectedColors.includes(color);
+
+            const isLightColor = color === "#FFFFFF" || color === "#F5DD06";
+
+            return (
+              <button
+                type="button"
+                key={color}
+                onClick={() => toggleItem(color, setSelectedColors)}
+                className={`relative size-10 cursor-pointer rounded-full border border-black/10 transition-all ${
+                  selected
+                    ? "ring-2 ring-black ring-offset-2"
+                    : "hover:scale-105"
+                }`}
+                style={{
+                  backgroundColor: color,
+                }}
+                aria-label={`Select color ${color}`}
+                aria-pressed={selected}
+              >
+                {selected && (
+                  <Check
+                    size={18}
+                    strokeWidth={3}
+                    className={`absolute inset-0 m-auto ${
+                      isLightColor ? "text-black" : "text-white"
+                    }`}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </FilterSection>
+
+      <div className="h-px w-full bg-black/15" />
+
+      {/* Size */}
+      <FilterSection
+        title="Sizes"
+        open={openSections.sizes}
+        onToggle={() => toggleSection("sizes")}
+      >
+        <div className="flex flex-wrap gap-2.5">
+          {sizes.map((size) => {
+            const selected = selectedSizes.includes(size);
+
+            return (
+              <button
+                type="button"
+                key={size}
+                onClick={() => toggleItem(size, setSelectedSizes)}
+                className={`w-fit cursor-pointer rounded-2xl border px-3 py-1.5 transition-colors duration-300 ${
+                  selected
+                    ? "border-black bg-black text-white"
+                    : "border-black/10 bg-black/5 hover:bg-black hover:text-white"
+                }`}
+                aria-pressed={selected}
+              >
+                {size}
+              </button>
+            );
+          })}
+        </div>
+      </FilterSection>
+
+      <div className="h-px w-full bg-black/15" />
+
+      {/* Price */}
+      <FilterSection
+        title="Price Range"
+        open={openSections.priceRange}
+        onToggle={() => toggleSection("priceRange")}
+      >
+        <div className="px-2.5 pb-8 pt-5">
+          <Range
+            values={priceRange}
+            min={MIN}
+            max={MAX}
+            step={STEP}
+            onChange={setPriceRange}
+            renderTrack={({ props, children }) => (
+              <div
+                {...props}
+                className="h-1 w-full rounded-full"
+                style={{
+                  ...props.style,
+                  background: getTrackBackground({
+                    values: priceRange,
+                    colors: ["#ccc", "#000", "#ccc"],
+                    min: MIN,
+                    max: MAX,
+                  }),
+                }}
+              >
+                {children}
+              </div>
+            )}
+            renderThumb={({ props, index }) => (
+              <div
+                {...props}
+                className="relative size-4 cursor-grab rounded-full bg-black shadow"
+              >
+                <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-black">
+                  ${priceRange[index]}
+                </span>
+              </div>
+            )}
+          />
+        </div>
+      </FilterSection>
+
+      {/* Actions */}
+      <div className="space-y-3 pt-5">
+        <button
+          type="button"
+          onClick={applyFilters}
+          className="w-full cursor-pointer rounded-3xl bg-black p-3 text-white transition-colors hover:bg-black/85"
+        >
+          Apply Filter
+        </button>
+
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="w-full cursor-pointer rounded-3xl border border-black/10 p-3 transition-colors hover:bg-black/5"
+        >
+          Clear All
+        </button>
       </div>
-      <button className="block w-10/12 mx-auto my-10 p-2 bg-black hover:bg-black/85 text-white rounded-3xl cursor-pointer">
-        Apply Filter
-      </button>
     </div>
   );
 };
