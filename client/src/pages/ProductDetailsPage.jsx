@@ -1,51 +1,73 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { ProductDetailsSection } from "../components/ProductDetails/ProductDetailsSection";
 import { ProductDetailsTab } from "../components/ProductDetails/ProductDetailsTab";
 import { RatingAndReviewsTab } from "../components/ProductDetails/RatingAndReviewsTab";
 import { FAQsTab } from "../components/ProductDetails/FAQsTab";
-import { getProduct } from "../store/thunks/productsThunk";
+import { getAllProducts, getProduct } from "../store/thunks/productsThunk";
+import { RelatedProducts } from "../components/ProductDetails/RelatedProducts";
+import { ProductsSlider } from "../components/common/ProductsSlider";
 
 export const ProductDetailsPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { currentProduct, status, error } = useSelector((state) => state.products);
-  const [activeTab, setActiveTab] = useState("rating & reviews");
+  const { currentProduct, status, error, products } = useSelector(
+    (state) => state.products,
+  );
+  const getRelatedProducts = () => {
+    const currentProduct = products.find((p) => p._id === id);
+    if (currentProduct) {
+      return products.filter((p) => p._id !== id);
+    }
+    return products.slice(0, 3);
+  };
 
   useEffect(() => {
     dispatch(getProduct(id));
   }, [dispatch, id]);
 
+  useEffect(() => {
+    if (!currentProduct?.category || !currentProduct?.style) {
+      return;
+    }
+
+    dispatch(
+      getAllProducts({
+        categories: currentProduct.category,
+        dressStyles: currentProduct.style,
+        pageNumber: 1,
+        pageSize: 5,
+      }),
+    );
+  }, [dispatch, currentProduct?.category, currentProduct?.style]);
+
   if (status === "loading" || !currentProduct || currentProduct._id !== id) {
-    return <div className="container mx-auto px-5 py-20 text-center text-black/60">Loading product...</div>;
+    return (
+      <div className="container mx-auto px-5 py-20 text-center text-black/60">
+        Loading product...
+      </div>
+    );
   }
 
   if (status === "failed") {
-    return <div className="container mx-auto px-5 py-20 text-center text-red-600">{error || "Product not found."}</div>;
+    return (
+      <div className="container mx-auto px-5 py-20 text-center text-red-600">
+        {error || "Product not found."}
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto">
       <ProductDetailsSection product={currentProduct} />
-      <div className="px-5 md:px-8">
-        <div className="min-h-10 shadow-md border-b border-black/60 flex" role="tablist">
-          {["product details", "rating & reviews", "FAQs"].map((tab) => (
-            <button
-              key={tab}
-              className={`flex-1 text-center leading-6 text-black/60 cursor-pointer hover:bg-black/10 transition-colors ${activeTab === tab ? "text-black border-b-2 border-black" : ""}`}
-              onClick={() => setActiveTab(tab)}
-              role="tab"
-              aria-selected={activeTab === tab}
-            >
-              {tab === "rating & reviews" ? "Rating & Reviews" : tab === "FAQs" ? "FAQs" : "Product Details"}
-            </button>
-          ))}
-        </div>
-        {activeTab === "product details" && <ProductDetailsTab />}
-        {activeTab === "rating & reviews" && <RatingAndReviewsTab />}
-        {activeTab === "FAQs" && <FAQsTab />}
-      </div>
+      <section id="relatedProducts" className="scroll-mt-[72px]">
+        <ProductsSlider
+          products={getRelatedProducts()}
+          title={"Related Products"}
+          filter={`?categories=${currentProduct?.category}&dressStyles=${currentProduct.style}`}
+        />
+      </section>
     </div>
   );
 };

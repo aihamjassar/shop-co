@@ -46,10 +46,10 @@ export const ProductDetailsSection = ({ product }) => {
         </Link>{" "}
         &gt;{" "}
         <Link
-          to={"/products"}
+          to={"/shop"}
           className="transition-colors duration-300 hover:text-blue-700"
         >
-          Products
+          Shop
         </Link>{" "}
         &gt; {name}
       </div>

@@ -18,7 +18,7 @@ export const TopSellingSection = () => {
   }, [dispatch]);
   return (
     <section id="topSellingSection" className="scroll-mt-20">
-      <ProductsSlider products={products} title={"Top Selling"} sortBy={'selling-desc'} />
+      <ProductsSlider products={products} title={"Top Selling"} filter={'?sortBy=selling-desc'} />
     </section>
   );
 };

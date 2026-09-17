@@ -2,7 +2,7 @@ import { ProductSlide } from "./ProductSlide";
 import { Link } from "react-router-dom";
 import { Slider } from "./Slider";
 
-export const ProductsSlider = ({ products, title, sortBy }) => {
+export const ProductsSlider = ({ products, title, filter }) => {
   return (
     <div className="container mx-auto px-5 md:px-8 py-15">
       <div className={"relative"}>
@@ -19,12 +19,14 @@ export const ProductsSlider = ({ products, title, sortBy }) => {
           </Slider>
         </div>
 
-        <Link
-          to={`/shop?sortBy=${sortBy || ''}`}
-          className="w-56 h-10 block mx-auto text-center leading-9 rounded-2xl font-bold border hover:bg-black hover:text-white transition-colors mt-10"
-        >
-          View All
-        </Link>
+        {products.length >= 4 && (
+          <Link
+            to={`/shop${filter || ""}`}
+            className="w-56 h-10 block mx-auto text-center leading-9 rounded-2xl font-bold border hover:bg-black hover:text-white transition-colors mt-10"
+          >
+            View All
+          </Link>
+        )}
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ export const NewArrivalsSection = () => {
       <ProductsSlider
         products={products}
         title={"New Arrivals"}
-        sortBy={"newest"}
+        filter={"?sortBy=newest"}
       />
     </section>
   );
