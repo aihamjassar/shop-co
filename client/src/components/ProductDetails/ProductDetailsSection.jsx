@@ -4,31 +4,15 @@ import { Check, Minus, Plus } from "lucide-react";
 import { Slider } from "../common/Slider";
 import { Link } from "react-router-dom";
 
-const colorMap = {
-  Black: "#111111",
-  White: "#ffffff",
-  Navy: "#1f2a44",
-  "Sky Blue": "#93c5fd",
-  Sand: "#d6c3a5",
-  Charcoal: "#374151",
-  Cream: "#f5f0e6",
-  Olive: "#66704a",
-  Burgundy: "#7f1d1d",
-  Champagne: "#ead7b7",
-  Stone: "#a8a29e",
-  Mocha: "#8b6f5a",
-  Sage: "#9caf88",
-};
-
 export const ProductDetailsSection = ({ product }) => {
-  const name = product.title || product.name;
-  const rating = product.ratingsAverage ?? product.rating ?? 0;
+  const name = product.title;
+  const rating = product.ratingsAverage;
   const images = [product.imageCover, ...(product.images || [])].filter(
     Boolean,
   );
-  const colors = product.colors?.length ? product.colors : ["Black"];
-  const sizes = product.sizes?.length ? product.sizes : ["One size"];
-  const price = Number(product.price || 0);
+  const colors = product.colors;
+  const sizes = product.sizes;
+  const price = Number(product.price);
   const discount = Number(product.discount || 0);
   const [selectedColor, setSelectedColor] = useState(colors[0]);
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
@@ -101,21 +85,24 @@ export const ProductDetailsSection = ({ product }) => {
           <div className="w-full h-px bg-black/15" />
           <h3 className="text-[12px] text-black/60">Select Color</h3>
           <div className="flex gap-3">
-            {colors.map((color) => (
-              <button
-                aria-label={`Select ${color}`}
-                className="flex justify-center items-center size-10 rounded-full cursor-pointer border border-black/10"
-                style={{ backgroundColor: colorMap[color] || color }}
-                key={color}
-                onClick={() => setSelectedColor(color)}
-              >
-                {selectedColor === color && (
-                  <Check
-                    className={color === "White" ? "text-black" : "text-white"}
-                  />
-                )}
-              </button>
-            ))}
+            {colors.map((color) => {
+              const isLightColor = color === "#FFFFFF" || color === "#F5DD06";
+              return (
+                <button
+                  aria-label={`Select ${color}`}
+                  className="flex justify-center items-center size-10 rounded-full cursor-pointer border border-black/10"
+                  style={{ backgroundColor: color }}
+                  key={color}
+                  onClick={() => setSelectedColor(color)}
+                >
+                  {selectedColor === color && (
+                    <Check
+                      className={isLightColor ? "text-black" : "text-white"}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
           <div className="w-full h-px bg-black/15" />
           <h3 className="text-[12px] text-black/60">Select Size</h3>

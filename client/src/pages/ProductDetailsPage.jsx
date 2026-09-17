@@ -6,7 +6,6 @@ import { ProductDetailsTab } from "../components/ProductDetails/ProductDetailsTa
 import { RatingAndReviewsTab } from "../components/ProductDetails/RatingAndReviewsTab";
 import { FAQsTab } from "../components/ProductDetails/FAQsTab";
 import { getAllProducts, getProduct } from "../store/thunks/productsThunk";
-import { RelatedProducts } from "../components/ProductDetails/RelatedProducts";
 import { ProductsSlider } from "../components/common/ProductsSlider";
 
 export const ProductDetailsPage = () => {
