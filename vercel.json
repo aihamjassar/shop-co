@@ -1,0 +1,28 @@
+{
+    "services": {
+        "client": {
+            "root": "client",
+            "framework": "vite"
+        },
+        "server": {
+            "root": "server",
+            "entrypoint": "server.js"
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/api(/.*)?",
+            "destination": {
+                "type": "service",
+                "service": "server"
+            }
+        },
+        {
+            "source": "/(.*)",
+            "destination": {
+                "type": "service",
+                "service": "client"
+            }
+        }
+    ]
+}
