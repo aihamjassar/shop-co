@@ -34,7 +34,8 @@ exports.addToCart = asyncHandler(async (req, res, next) => {
         item.size === size
     );
 
-    if (productIndex > -1) cart.cartItems[productIndex].quantity += 1;
+    if (productIndex > -1)
+      cart.cartItems[productIndex].quantity += quantity;
     else
       cart.cartItems.push({ product: productId, quantity, price, color, size });
   }

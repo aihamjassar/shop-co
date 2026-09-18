@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { createElement, lazy, Suspense } from "react";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -67,6 +67,16 @@ const CartPage = lazy(() =>
     default: module.CartPage,
   }))
 );
+const CheckoutSuccessPage = lazy(() =>
+  import("./pages/CheckoutResultPage").then(({ CheckoutResultPage }) => ({
+    default: () => createElement(CheckoutResultPage, { success: true }),
+  }))
+);
+const CheckoutCancelPage = lazy(() =>
+  import("./pages/CheckoutResultPage").then(({ CheckoutResultPage }) => ({
+    default: () => createElement(CheckoutResultPage, { success: false }),
+  }))
+);
 const ResetPasswordPage = lazy(() =>
   import("./pages/ResetPasswordPage").then((module) => ({
     default: module.ResetPasswordPage,
@@ -102,6 +112,8 @@ function App() {
             <Route path="shop" element={<ProductsPage />} />
             <Route path="details/:id" element={<ProductDetailsPage />} />
             <Route path="cart" element={<CartPage />} />
+            <Route path="success" element={<CheckoutSuccessPage />} />
+            <Route path="cancel" element={<CheckoutCancelPage />} />
             <Route
               path="reset-password/:token"
               element={<ResetPasswordPage />}

@@ -57,7 +57,12 @@ exports.createCheckoutSession = asyncHandler(async (req, res, next) => {
 
   if (totalAmount > 200) await createNewCoupon(req.user._id);
 
-  res.status(200).json({ data: session.id });
+  res.status(200).json({
+    data: {
+      id: session.id,
+      url: session.url,
+    },
+  });
 });
 
 exports.webHookCheckout = asyncHandler(async (req, res, next) => {
