@@ -2,11 +2,11 @@
     "services": {
         "client": {
             "root": "client",
-            "framework": "vite"
+            "framework": "vite",
+            "entrypoint": "main.jsx"
         },
         "server": {
-            "root": "server",
-            "entrypoint": "server.js"
+            "root": "server"
         }
     },
     "rewrites": [
@@ -21,7 +21,7 @@
             "source": "/(.*)",
             "destination": {
                 "type": "service",
-                "service": "client"
+                "service": "client"    
             }
         }
     ]
