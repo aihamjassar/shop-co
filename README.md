@@ -11,7 +11,7 @@
   </p>
 </div>
 
-![SHOP.CO storefront](client/screenshots/01-home.webp)
+![SHOP.CO storefront](client/screenshots/01-home.png)
 
 ## Overview
 
@@ -37,21 +37,21 @@ The project is organized as a React/Vite client and an Express/MongoDB API. The 
 
 The landing page presents the brand identity, hero section, featured product collections, style categories, and customer-focused content.
 
-![SHOP.CO home page](client/screenshots/01-home.webp)
+![SHOP.CO home page](client/screenshots/01-home.png)
 
 The shop page combines catalog browsing with category, style, color, size, price, search, sorting, and pagination controls.
 
-![SHOP.CO product catalog](client/screenshots/02-shop.webp)
+![SHOP.CO product catalog](client/screenshots/02-shop.png)
 
 ### Product details and cart journey
 
 The product details view brings together product imagery, variant selection, quantity management, stock information, and the primary add-to-cart action.
 
-![SHOP.CO product details](client/screenshots/03-product-details.webp)
+![SHOP.CO product details](client/screenshots/03-product-details.png)
 
 The cart route provides a clear sign-in state for users who have not authenticated yet and preserves the same visual language as the storefront.
 
-![SHOP.CO cart sign-in state](client/screenshots/04-cart.webp)
+![SHOP.CO cart sign-in state](client/screenshots/04-cart.png)
 
 ### Checkout results and local seed flow
 
@@ -59,11 +59,11 @@ The checkout result pages make the next action explicit after a Stripe redirect,
 
 | Payment successful | Payment cancelled |
 | --- | --- |
-| ![Payment successful](client/screenshots/05-checkout-success.webp) | ![Payment cancelled](client/screenshots/06-checkout-cancel.webp) |
+| ![Payment successful](client/screenshots/05-checkout-success.png) | ![Payment cancelled](client/screenshots/06-checkout-cancel.png) |
 
 The local seed page confirms that the old product catalog was removed and replaced with fresh development data.
 
-![SHOP.CO seed result](client/screenshots/07-seed.webp)
+![SHOP.CO seed result](client/screenshots/07-seed.png)
 
 ## Technology stack
 
