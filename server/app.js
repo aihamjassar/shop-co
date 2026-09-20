@@ -71,14 +71,14 @@ app.use("/api/v1/reviews", reviewRoute);
 app.use("/api/v1/orders", orderRoute);
 app.use("/api/v1/upload-signature", uploadRoute);
 app.use("/api/v1/delete-image", deleteImageRoute);
-
+/*
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/dist")));
   app.get("{*splat}", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../client", "dist", "index.html"));
   });
 }
-
+*/
 app.all("/{*splat}", (req, res, next) => {
   const ApiError = require("./utils/apiError");
   next(new ApiError(`Can't find ${req.originalUrl} on this server`, 404));
