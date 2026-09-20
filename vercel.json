@@ -3,7 +3,7 @@
         "client": {
             "root": "client",
             "framework": "vite",
-            "entrypoint": "main.jsx"
+            "entrypoint": "src/main.jsx"
         },
         "server": {
             "root": "server"
