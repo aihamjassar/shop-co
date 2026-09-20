@@ -6,7 +6,8 @@
             "entrypoint": "src/main.jsx"
         },
         "server": {
-            "root": "server"
+            "root": "server",
+            "entrypoint": "server.js"
         }
     },
     "rewrites": [
