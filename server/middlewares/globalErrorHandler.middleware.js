@@ -22,7 +22,7 @@ const sendErrorForDev = (err, res) => {
 
 const sendErrorForProd = (err, res) => {
   if (err.isOperational)
-    res.status(err.statusCode).json({
+    return res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
     });
