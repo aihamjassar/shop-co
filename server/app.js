@@ -21,6 +21,7 @@ const uploadRoute = require("./routes/upload.route");
 const deleteImageRoute = require("./routes/deleteImage.route");
 
 const { webHookCheckout } = require("./controllers/payment.controller");
+const { seedProducts } = require("./seed/seed");
 
 const app = express();
 
@@ -42,6 +43,24 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 app.use("/api/v1/test", (req, res) => res.json({ message: "Test-api" }));
+
+app.get("/api/v1/seed", async (req, res, next) => {
+  if (process.env.NODE_ENV !== "development") {
+    return res.status(403).json({
+      message: "The seed route is available only in development mode",
+    });
+  }
+
+  try {
+    const result = await seedProducts();
+    res.status(200).json({
+      message: "Products seeded successfully",
+      count: result.count,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/products", productRoute);

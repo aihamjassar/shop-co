@@ -895,6 +895,15 @@ const products = [
   },
 ];
 
+async function seedProducts() {
+  await Product.deleteMany({});
+  const seededProducts = await Product.insertMany(products);
+  return {
+    count: seededProducts.length,
+    products: seededProducts,
+  };
+}
+
 async function run() {
   const mode = process.argv[2] || "import";
   await connectDB();
@@ -902,17 +911,20 @@ async function run() {
     await Product.deleteMany({});
     console.log("Product data removed.");
   } else if (mode === "import") {
-    await Product.deleteMany({});
-    await Product.insertMany(products);
-    console.log(`${products.length} products seeded.`);
+    const result = await seedProducts();
+    console.log(`${result.count} products seeded.`);
   } else {
     throw new Error(`Unknown seed mode: ${mode}. Use import or destroy.`);
   }
   await mongoose.connection.close();
 }
 
-run().catch(async (error) => {
-  console.error("Seed failed:", error.message);
-  await mongoose.connection.close();
-  process.exit(1);
-});
+if (require.main === module) {
+  run().catch(async (error) => {
+    console.error("Seed failed:", error.message);
+    await mongoose.connection.close();
+    process.exit(1);
+  });
+}
+
+module.exports = { products, seedProducts };

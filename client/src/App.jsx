@@ -67,6 +67,11 @@ const CartPage = lazy(() =>
     default: module.CartPage,
   }))
 );
+const SeedPage = lazy(() =>
+  import("./pages/SeedPage").then((module) => ({
+    default: module.SeedPage,
+  }))
+);
 const CheckoutSuccessPage = lazy(() =>
   import("./pages/CheckoutResultPage").then(({ CheckoutResultPage }) => ({
     default: () => createElement(CheckoutResultPage, { success: true }),
@@ -112,6 +117,7 @@ function App() {
             <Route path="shop" element={<ProductsPage />} />
             <Route path="details/:id" element={<ProductDetailsPage />} />
             <Route path="cart" element={<CartPage />} />
+            <Route path="seed" element={<SeedPage />} />
             <Route path="success" element={<CheckoutSuccessPage />} />
             <Route path="cancel" element={<CheckoutCancelPage />} />
             <Route
