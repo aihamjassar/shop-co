@@ -45,11 +45,13 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use("/api/v1/test", (req, res) => res.json({ message: "Test-api" }));
 
 app.get("/api/v1/seed", async (req, res, next) => {
+  /*
   if (process.env.NODE_ENV !== "development") {
     return res.status(403).json({
       message: "The seed route is available only in development mode",
     });
   }
+  */
 
   try {
     const result = await seedProducts();
