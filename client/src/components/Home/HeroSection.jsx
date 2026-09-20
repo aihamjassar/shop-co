@@ -1,6 +1,6 @@
 import heroImg from "../../assets/heroImg.png";
 import star from "../../assets/Vector.svg";
-import { Link } from "React-Router";
+import { Link } from "react-router";
 
 export const HeroSection = () => {
   return (
