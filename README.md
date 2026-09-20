@@ -1,4 +1,4 @@
-# SHOP.CO
+# SHOP.CO 
 
 <div align="center">
   <img src="client/public/favicon.svg" alt="SHOP.CO logo" width="88" height="88" />
