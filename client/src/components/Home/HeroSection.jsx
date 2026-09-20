@@ -1,5 +1,6 @@
 import heroImg from "../../assets/heroImg.png";
 import star from "../../assets/Vector.svg";
+import { Link } from "React-Router";
 
 export const HeroSection = () => {
   return (
@@ -20,14 +21,14 @@ export const HeroSection = () => {
                 your sense of style.
               </p>
             </div>
-            <a
-              href={"/shop"}
+            <Link
+              to={"/shop"}
               className="block w-full lg:w-52 p-3.5 rounded-[62px] text-white bg-black text-center my-8 cursor-pointer hover:bg-gray-800 transition-colors"
               role="button"
               aria-label="Shop Now"
             >
               Shop Now
-            </a>
+            </Link>
             <div className="flex flex-col sm:flex-row items-center justify-between gap-8 my-8">
               {/* 1 */}
               <div className="text-center px-4">
