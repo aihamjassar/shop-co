@@ -1,11 +1,10 @@
-const path = require('path')
+const path = require("path");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const globalErrorHandler = require("./middlewares/globalErrorHandler.middleware");
 const morgan = require("morgan");
 const { v2: cloudinary } = require("cloudinary");
-
 
 require("dotenv").config();
 
@@ -34,12 +33,12 @@ cloudinary.config({
 app.post(
   "/api/v1/payments/webhook",
   express.raw({ type: "application/json" }),
-  webHookCheckout
+  webHookCheckout,
 );
 
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
-app.use(cors({ origin: "https://shopco-v0.vercel.app", credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 app.use("/api/v1/test", (req, res) => res.json({ message: "Test-api" }));
