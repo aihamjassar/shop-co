@@ -11,10 +11,11 @@ exports.generateRefreshToken = (userId) =>
   });
 
 exports.sendTokensAsCookies = (res, accessToken, refreshToken) => {
+  const isProduction = process.env.NODE_ENV === "production";
   res.cookie("access_token", accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge:
       parseInt(process.env.JWT_COOKIE_EXPIRES_DAYS || "1", 10) *
       24 *
@@ -25,8 +26,8 @@ exports.sendTokensAsCookies = (res, accessToken, refreshToken) => {
 
   res.cookie("refresh_token", refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge:
       parseInt(process.env.REFRESH_TOKEN_COOKIE_DAYS || "30", 10) *
       24 *

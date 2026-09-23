@@ -21,14 +21,14 @@ createRoot(document.getElementById("root")).render(
               toastOptions={{
                 duration: 3000,
                 style: {
-                  background: "#333",
+                  background: "#000",
                   color: "#fff",
                   borderRadius: "10px",
                   padding: "12px 16px",
                 },
                 success: {
                   style: {
-                    background: "#16a34a",
+                    background: "#000",
                   },
                   iconTheme: {
                     primary: "#fff",
@@ -37,7 +37,7 @@ createRoot(document.getElementById("root")).render(
                 },
                 error: {
                   style: {
-                    background: "#dc2626",
+                    background: "#000",
                   },
                   iconTheme: {
                     primary: "#fff",
@@ -51,5 +51,5 @@ createRoot(document.getElementById("root")).render(
         </GoogleOAuthProvider>
       </Provider>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );
