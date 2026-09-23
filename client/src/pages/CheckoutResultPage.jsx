@@ -1,9 +1,17 @@
 import { CheckCircle2, XCircle } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { clearCart } from "../store/thunks/cartThunk";
+import { useDispatch } from "react-redux";
 
 export const CheckoutResultPage = ({ success }) => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const sessionId = new URLSearchParams(location.search).get("session_id");
+
+  if (success && sessionId) {
+    // place order and clear the cart
+    dispatch(clearCart());
+  }
 
   return (
     <div className="container mx-auto px-5 md:px-8 py-16 min-h-[60vh] flex items-center justify-center">
@@ -22,7 +30,9 @@ export const CheckoutResultPage = ({ success }) => {
             : "Your payment was cancelled. Nothing was charged, and you can return to your cart whenever you are ready."}
         </p>
         {success && sessionId && (
-          <p className="mt-4 text-xs text-black/40 break-all">Reference: {sessionId}</p>
+          <p className="mt-4 text-xs text-black/40 break-all">
+            Reference: {sessionId}
+          </p>
         )}
         <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
           <Link
