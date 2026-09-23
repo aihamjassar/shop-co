@@ -2,12 +2,12 @@ const jwt = require("jsonwebtoken");
 
 exports.generateAccessToken = (userId) =>
   jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN, // 15 minute
+    expiresIn: process.env.JWT_EXPIRES_IN || "15m", // 15 minute
   });
 
 exports.generateRefreshToken = (userId) =>
   jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN, // 30 days
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || "30d", // 30 days
   });
 
 exports.sendTokensAsCookies = (res, accessToken, refreshToken) => {
